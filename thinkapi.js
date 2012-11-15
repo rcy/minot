@@ -24,15 +24,15 @@ exports.initialize = function(app) {
   // setup api endpoints
 
   // ------
-  // TABLES
+  // CATALOGS
   // ------
-  app.get('/api/tables', function(req, res) {
-    r.db('test').tableList().run().collect(function(tables) {
-      res.send({'tables': tables});
+  app.get('/api/catalogs', function(req, res) {
+    r.db('test').tableList().run().collect(function(catalogs) {
+      res.send({'catalogs': catalogs});
     });
   });
 
-  app.post('/api/tables', function(req, res) {
+  app.post('/api/catalogs', function(req, res) {
     var name = req.body.name;
     console.log('name', name);
     r.db('test').tableCreate(name).run(function(x) {
@@ -41,40 +41,40 @@ exports.initialize = function(app) {
   });
 
   // ------
-  // DOCUMENTS
+  // ITEMS
   // ------
-  app.get('/api/tables/:table/documents', function(req, res) {
-    var table = req.params.table;
+  app.get('/api/catalogs/:catalog/items', function(req, res) {
+    var catalog = req.params.catalog;
     var per_page = 100;
-    r.db('test').table(table).limit(per_page).run().collect(function(documents) {
-      res.send({table: table, documents: documents, page: 0, per_page: per_page, doc_count: '???'});
+    r.db('test').table(catalog).limit(per_page).run().collect(function(items) {
+      res.send({catalog: catalog, items: items, page: 0, per_page: per_page, item_count: '???'});
     });
   });
 
-  app.post('/api/tables/:table/documents', function(req, res) {
-    var table = req.params.table;
-    var doc = req.body;
-    r.db('test').table(table).insert(doc).run(function(result) {
+  app.post('/api/catalogs/:catalog/items', function(req, res) {
+    var catalog = req.params.catalog;
+    var item = req.body;
+    r.db('test').table(catalog).insert(item).run(function(result) {
       res.send(result);
     });
   });
 
-  app.get('/api/tables/:table/documents/:id', function(req, res) {
-    var table = req.params.table;
+  app.get('/api/catalogs/:catalog/items/:id', function(req, res) {
+    var catalog = req.params.catalog;
     var id = req.params.id;
-    var doc = r.db('test').table(table).get(id).run(function(doc) {
-      if (doc) {
-        res.send(doc);
+    var item = r.db('test').table(catalog).get(id).run(function(item) {
+      if (item) {
+        res.send(item);
       } else {
         res.send({error: 'not found'}, 404);
       }
     });
   });
 
-  // post a new document in :table
-  app.post('/api/tables/:table', function(req, res) {
-    var table = req.params.table;
-    r.table(table).insert(req.body).runp();
+  // post a new item in :catalog
+  app.post('/api/catalogs/:catalog', function(req, res) {
+    var catalog = req.params.catalog;
+    r.table(catalog).insert(req.body).runp();
     res.send('');
   });
 

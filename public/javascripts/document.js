@@ -1,22 +1,22 @@
 App = {};
 
-App.Document = Backbone.Model.extend();
+App.Item = Backbone.Model.extend();
 
-App.Documents = Backbone.Collection.extend({
-  model: App.Document,
+App.Items = Backbone.Collection.extend({
+  model: App.Item,
   parse: function(response) {
-    return response.documents;
+    return response.items;
   },
   initialize: function(models, options) {
-    this.table = options.table;
-    this.url = '/api/tables/'+this.table+'/documents';
+    this.catalog = options.catalog;
+    this.url = '/api/catalogs/'+this.catalog+'/items';
     return this;
   }
 });
 
-App.DocumentView = Backbone.View.extend({
+App.ItemView = Backbone.View.extend({
   tagName: 'li',
-  className: 'document',
+  className: 'item',
   template: _.template("default template"),
   render: function() {
     this.$el.html(this.template(this.model.toJSON()));
@@ -28,13 +28,13 @@ App.DocumentView = Backbone.View.extend({
   }
 });
 
-App.DocumentsView = Backbone.View.extend({
+App.ItemsView = Backbone.View.extend({
   template: _.template("<ul></ul>"),
   render: function() {
     var $el = this.$el;
     $el.html(this.template());
     this.collection.forEach(function(model) {
-      var itemView = new App.DocumentView({model: model, template: this.itemTemplate});
+      var itemView = new App.ItemView({model: model, template: this.itemTemplate});
       itemView.render();
       this.$el.append(itemView.el);
     }, this);
@@ -46,6 +46,6 @@ App.DocumentsView = Backbone.View.extend({
   }
 });
 
-docs = new App.Documents([], {table: 'todo'});
-dview = new App.DocumentsView({collection: docs, el: 'body', itemTemplateHTML: "<%= summary %>"});
+docs = new App.Items([], {catalog: 'todo'});
+dview = new App.ItemsView({collection: docs, el: 'body', itemTemplateHTML: "<%= summary %>"});
 docs.fetch();
