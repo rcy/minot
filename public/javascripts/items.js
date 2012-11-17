@@ -1,5 +1,3 @@
-App = {};
-
 App.Item = Backbone.Model.extend();
 
 App.Items = Backbone.Collection.extend({
@@ -45,7 +43,3 @@ App.ItemsView = Backbone.View.extend({
     this.collection.on('reset', this.render, this);
   }
 });
-
-docs = new App.Items([], {catalog: 'todo'});
-dview = new App.ItemsView({collection: docs, el: 'body', itemTemplateHTML: "<%= summary %>"});
-docs.fetch();

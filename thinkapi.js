@@ -17,6 +17,7 @@ exports.initialize = function(app) {
   // connect database
   r.connect({host:'localhost', port: 28015}, function() {
     console.log('rethink connected')
+    r.db('test').tableCreate('catalogs').run();
   }, function() {
     throw 'rethinkdb connection failed';
   });
@@ -27,16 +28,25 @@ exports.initialize = function(app) {
   // CATALOGS
   // ------
   app.get('/api/catalogs', function(req, res) {
-    r.db('test').tableList().run().collect(function(catalogs) {
+    r.db('test').table('catalogs').run().collect(function(catalogs) {
       res.send({'catalogs': catalogs});
     });
   });
 
   app.post('/api/catalogs', function(req, res) {
+    var cats = r.db('test').table('catalogs');
     var name = req.body.name;
-    console.log('name', name);
-    r.db('test').tableCreate(name).run(function(x) {
-      res.send(x, 201);
+
+    cats.filter(r('name').eq(name)).count().run(function(result) {
+      if (result > 0) {
+        res.send({error: 'catalog already exists'}, 500); // TODO: not 500
+      } else {
+        cats.insert({table_name: name, owner_name: 'rcy'}).run(function(result) {
+          r.db('test').tableCreate(name).run(function(result) {
+            res.send(result, 201);
+          });
+        });
+      }
     });
   });
 
