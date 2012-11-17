@@ -11,23 +11,28 @@ App.CatalogView = Backbone.View.extend({
   tagName: 'li',
   className: 'catalog',
   template: _.template('<a href="#"><%= name %></a>'),
+
   events: {
     "click a": "click"
   },
+
+  initialize: function(options) {
+    this.model.on('change', this.render, this);
+  },
+
   click: function() {
     console.log('click', this.model.get('name'));
   },
+
   render: function() {
     this.$el.html(this.template(this.model.toJSON()));
     return this;
-  },
-  initialize: function(options) {
-    this.model.on('change', this.render, this);
   }
 });
 
 App.CatalogsView = Backbone.View.extend({
   template: _.template("<ul></ul>"),
+
   render: function() {
     var $el = this.$el;
     $el.html(this.template());
@@ -38,6 +43,7 @@ App.CatalogsView = Backbone.View.extend({
     }, this);
     return this;
   },
+
   initialize: function(options) {
     this.collection.on('reset', this.render, this);
   }
