@@ -1,21 +1,18 @@
-r = require('rethinkdb')
-r.connect({host:'localhost', port: 28015}, function(conn) {
-//  r.db('test').tableCreate('bar').runp()
-  // r.table('tv_shows').insert({ name: 'Star Trek TNG' }).runp()
+minot = require('./minot');
 
-//  r.db('test').table('tv_shows').count().runp()
+minot.connect({dbName: 'rcytestdb', callback: start});
 
-  // conn.run(r.table('tv_shows'), function(show) {
-  //   console.log(show)
-  // })
-  // conn.close()
+function start() {
+  minot.catalogs(function(cats) {
+    console.log('categories', cats);
+  })
 
-  x = r.db('test').tableList();
-  x.run().collect(function(a) { 
-    console.log('x', a);
-    return true;
-  });
-
-}, function() {
-  throw 'connection failed';
-});
+  minot.catalogCreate({name: "musicians i don't like", 
+                       success: function(result) {
+                         console.log('success', result);
+                       },
+                       failure: function(result) {
+                         console.log('error', result);
+                       }
+                      });
+}

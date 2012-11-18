@@ -21,7 +21,9 @@ App.CatalogView = Backbone.View.extend({
   },
 
   click: function() {
-    console.log('click', this.model.get('name'));
+    var cat = this.model;
+    console.log('click', cat);
+    App.visitCatalog(cat);
   },
 
   render: function() {

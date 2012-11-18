@@ -1,53 +1,21 @@
-r = require('rethinkdb');
+minot = require('./dbapi');
 
-exports.formatParser = function() {
-  return function(req, res, next) {
-    var match = req.url.match(/^(\/api\/.+)\.(.+)$/);
-    if (match) {
-      req.url = match[1];
-      req.format = match[2];
-    } else {
-      req.format = 'json';
-    }
-    next();
-  }
-}
 
 exports.initialize = function(app) {
-  // connect database
-  r.connect({host:'localhost', port: 28015}, function() {
-    console.log('rethink connected')
-    r.db('test').tableCreate('catalogs').run();
-  }, function() {
-    throw 'rethinkdb connection failed';
-  });
-
+  minot.connect();
   // setup api endpoints
 
   // ------
   // CATALOGS
   // ------
   app.get('/api/catalogs', function(req, res) {
-    r.db('test').table('catalogs').run().collect(function(catalogs) {
+    minot.catalogs(r, function(catalogs) {
       res.send({'catalogs': catalogs});
     });
   });
 
   app.post('/api/catalogs', function(req, res) {
-    var cats = r.db('test').table('catalogs');
-    var name = req.body.name;
-
-    cats.filter(r('name').eq(name)).count().run(function(result) {
-      if (result > 0) {
-        res.send({error: 'catalog already exists'}, 500); // TODO: not 500
-      } else {
-        cats.insert({table_name: name, owner_name: 'rcy'}).run(function(result) {
-          r.db('test').tableCreate(name).run(function(result) {
-            res.send(result, 201);
-          });
-        });
-      }
-    });
+    minot.catalogCreate(name: req.body.name);
   });
 
   // ------
