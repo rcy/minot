@@ -33,7 +33,7 @@ App.CatalogView = Backbone.View.extend({
 });
 
 App.CatalogsView = Backbone.View.extend({
-  template: _.template("<ul></ul>"),
+  template: _.template('<div><a href="#">create new</a><ul class="catalogs"></ul></div>'),
 
   render: function() {
     var $el = this.$el;
@@ -41,7 +41,7 @@ App.CatalogsView = Backbone.View.extend({
     this.collection.forEach(function(model) {
       var catalogView = new App.CatalogView({model: model});
       catalogView.render();
-      this.$el.append(catalogView.el);
+      this.$el.find('.catalogs').append(catalogView.el);
     }, this);
     return this;
   },
