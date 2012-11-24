@@ -3,16 +3,14 @@ window.App = {
   },
 
   start: function() {
-    cats = new App.Catalogs();
-    cview = new App.CatalogsView({el: 'body', collection: cats})
-    cats.fetch();
+    this.data.lists = new App.Lists();
+    cview = new App.ListsView({el: 'body', collection: this.data.lists})
+    this.data.lists.fetch();
   },
 
-  visitCatalog: function(cat) {
-    docs = new App.Items([], {catalog: cat.get('name')});
-    console.log(cat);
-    dview = new App.ItemsView({collection: docs, el: 'body', itemTemplateHTML: "<%= summary %>"});
-    catsettingview = new App.CatalogSettingsView({model: cat});
-    docs.fetch();
+  visitList: function(list) {
+    this.data.items = new App.Items([], {list: list.get('name')});
+    dview = new App.ItemsView({collection: this.data.items, el: 'body', itemTemplateHTML: list.itemTemplateHTML() });
+    this.data.items.fetch();
   }
 }

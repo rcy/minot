@@ -1,18 +1,54 @@
 minot = require('./minot');
 
-minot.connect({dbName: 'rcytestdb', callback: start});
+minot.connect({dbName: 'test', callback: fetch});
+
+function fetch() {
+  minot.listItems('todo', function(result) {
+    console.log('todos', result);
+  });
+  minot.lists(function(result) {
+    console.log('*** lists ***');
+    for (var i in result) {
+      console.log(result[i]);
+    }
+  });
+}
 
 function start() {
-  minot.catalogs(function(cats) {
-    console.log('categories', cats);
-  })
+  console.log('start');
 
-  minot.catalogCreate({name: "musicians i don't like", 
-                       success: function(result) {
-                         console.log('success', result);
-                       },
-                       failure: function(result) {
-                         console.log('error', result);
-                       }
-                      });
+  minot.listCreate({name: "todo",
+                    catalog: "default",
+                    fields: [ 
+                      {
+                        name: 'summary',
+                        type: 'string'
+                      },
+                      {
+                        name: 'description',
+                        type: 'string'
+                      }
+                    ],
+                    callback: function(result) {
+                      console.log('created list "todo"', result);
+                      addItems();
+                    }
+                   });
 }
+
+function addItems() {
+  minot.itemAdd("todo", {summary: "finish code", description: "keep working"}, itemAddedCB);
+  minot.itemAdd("todo", {summary: "eat dinner", description: "yum"}, itemAddedCB);
+  minot.itemAdd("todo", {summary: "sleep", description: "rest is important"}, itemAddedCB);
+}
+
+function itemAddedCB(result) {
+  console.log('item added: ', result);
+}
+
+/*
+  create a catalog (hasmany lists)
+  create a list (hasmany items)
+  item (hasmany fields)
+  a list contains items and (optionally) templates
+*/

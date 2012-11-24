@@ -6,8 +6,8 @@ App.Items = Backbone.Collection.extend({
     return response.items;
   },
   initialize: function(models, options) {
-    this.catalog = options.catalog;
-    this.url = '/api/catalogs/'+this.catalog+'/items';
+    this.list = options.list;
+    this.url = '/api/lists/'+this.list+'/items';
     return this;
   }
 });

@@ -41,21 +41,27 @@ app.get('/', routes.index);
 minot.connect();
 
 // api routes
-app.get('/api/catalogs', function(req, res) {
-  minot.catalogs(function(catalogs) {
-    res.send({'catalogs': catalogs});
+app.get('/api/lists', function(req, res) {
+  minot.lists(function(lists) {
+    res.send({'lists': lists});
   });
 });
 
-app.post('/api/catalogs', function(req, res) {
-  minot.catalogCreate({name: req.body.name,
-                       fields: req.body.fields,
-                       callback: function(result) {
-                         res.send(result.result, result.response);
-                       }});
+app.post('/api/lists', function(req, res) {
+  minot.listCreate({name: req.body.name,
+                    fields: req.body.fields,
+                    callback: function(result) {
+                      res.send(result.result, result.response);
+                    }});
 });
 
+app.get('/api/lists/:list/items', function(req, res) {
+  minot.listItems(req.params.list, function(items) {
+    res.send({'items': items});
+  })
+});
 
+// start server
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
