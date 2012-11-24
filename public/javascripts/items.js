@@ -16,6 +16,12 @@ App.ItemView = Backbone.View.extend({
   tagName: 'li',
   className: 'item',
   template: _.template("default template"),
+  events: {
+    "click": "click"
+  },
+  click: function(e) {
+    App.popup(this.model);
+  },
   render: function() {
     this.$el.html(this.template(this.model.toJSON()));
     return this;
@@ -27,8 +33,9 @@ App.ItemView = Backbone.View.extend({
 });
 
 App.ItemsView = Backbone.View.extend({
-  template: _.template("<ul></ul>"),
+  template: _.template('<ul></ul>'),
   render: function() {
+    console.log('itemsview render', this.$el);
     var $el = this.$el;
     $el.html(this.template());
     this.collection.forEach(function(model) {

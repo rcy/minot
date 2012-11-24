@@ -9,8 +9,9 @@ window.App = {
   },
 
   visitList: function(list) {
+    this.data.list = list;
     this.data.items = new App.Items([], {list: list.get('name')});
-    dview = new App.ItemsView({collection: this.data.items, el: 'body', itemTemplateHTML: list.itemTemplateHTML() });
     this.data.items.fetch();
+    this.data.page = new App.ListPage({el: 'body', model: list});
   }
 }

@@ -5,10 +5,11 @@ App.List = Backbone.Model.extend({
       return html;
     } else {
       var fields = this.get('fields');
+      return "<%= " + fields[0].name + " %>";
       
-      return _.map(fields, function(f) {
-        return "<%= " + f.name + " %>";
-      }).join(', ');
+      // return _.map(fields, function(f) {
+      //   return "<%= " + f.name + " %>";
+      // }).join(', ');
     }
   }
 });
