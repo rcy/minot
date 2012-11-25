@@ -5,8 +5,6 @@ App.Models.List = Backbone.Model.extend({
       return html;
     } else {
       var fields = this.get('fields');
-      // return "<%= " + fields[0].name + " %>";
-      
       return _.map(fields, function(f) {
         return "<td><%= " + f.name + " %></td>";
       }).join('');
@@ -37,7 +35,6 @@ App.Views.List = Backbone.View.extend({
 
   click: function() {
     var list = this.model;
-    console.log('click', list);
     App.visitList(list);
   },
 
