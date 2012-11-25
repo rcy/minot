@@ -1,7 +1,7 @@
-App.Item = Backbone.Model.extend();
+App.Models.Item = Backbone.Model.extend();
 
-App.Items = Backbone.Collection.extend({
-  model: App.Item,
+App.Collections.Items = Backbone.Collection.extend({
+  model: App.Models.Item,
   parse: function(response) {
     return response.items;
   },
@@ -12,7 +12,7 @@ App.Items = Backbone.Collection.extend({
   }
 });
 
-App.ItemView = Backbone.View.extend({
+App.Views.Item = Backbone.View.extend({
   tagName: 'tr',
   className: 'item',
   template: _.template("default template"),
@@ -32,11 +32,11 @@ App.ItemView = Backbone.View.extend({
   }
 });
 
-App.ItemsView = Backbone.View.extend({
+App.Views.Items = Backbone.View.extend({
   render: function() {
     console.log('itemsview render', this.$el);
     this.collection.forEach(function(model) {
-      var itemView = new App.ItemView({model: model, template: this.itemTemplate});
+      var itemView = new App.Views.Item({model: model, template: this.itemTemplate});
       itemView.render();
       this.$el.append(itemView.el);
     }, this);

@@ -1,4 +1,4 @@
-App.List = Backbone.Model.extend({
+App.Models.List = Backbone.Model.extend({
   itemTemplateHTML: function() {
     var html = this.get('itemTemplateHTML');
     if (html) {
@@ -14,15 +14,15 @@ App.List = Backbone.Model.extend({
   }
 });
 
-App.Lists = Backbone.Collection.extend({
-  model: App.List,
+App.Collections.Lists = Backbone.Collection.extend({
+  model: App.Models.List,
   url: '/api/lists',
   parse: function(response) {
     return response.lists;
   }
 });
 
-App.ListView = Backbone.View.extend({
+App.Views.List = Backbone.View.extend({
   tagName: 'li',
   className: 'list',
   template: _.template('<a href="#"><%= name %></a>'),
@@ -47,14 +47,14 @@ App.ListView = Backbone.View.extend({
   }
 });
 
-App.ListsView = Backbone.View.extend({
+App.Views.Lists = Backbone.View.extend({
   template: _.template('<div><a href="#">create new</a><table class="lists"></table></div>'),
 
   render: function() {
     var $el = this.$el;
     $el.html(this.template());
     this.collection.forEach(function(model) {
-      var listView = new App.ListView({model: model});
+      var listView = new App.Views.List({model: model});
       listView.render();
       this.$el.find('.lists').append(listView.el);
     }, this);
