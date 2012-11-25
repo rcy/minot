@@ -13,7 +13,8 @@ App.Views.ListPage = Backbone.View.extend({
   },
   create: function() {
     console.log('create', this.model);
-    new App.Views.ModalItemCreate({model: this.model});
+    var modal = new App.Views.ModalItemCreate({model: this.model});
+    modal.render();
   },
   render: function() {
     this.$el.html(this.template(this.model.toJSON()));
@@ -24,13 +25,26 @@ App.Views.ListPage = Backbone.View.extend({
 App.Views.ModalItemCreate = Backbone.View.extend({
   template: _.template($("#createItemModal-template").html()),
   initialize: function(options) {
-    this.render();
+  },
+  events: {
+    "click button.submit": "submit",
+    "shown": "modalReady"
+  },
+  modalReady: function(e) {
+    $(e.currentTarget).find('input:first').focus();
+  },
+  submit: function() {
+    var item = this.form.getModel(this.model);
+    console.log('serialize:', item);
+    item.save();
   },
   render: function() {
-    var form = new App.Views.ItemCreateForm({list: this.model});
     var $popup = $(this.template(this.model.toJSON()));
-    $popup.find('.modal-body').html(form.el);
-    $popup.modal();
+    this.setElement($popup);
+    this.form = new App.Views.ItemCreateForm({list: this.model});
+    this.$el.find('.modal-body').html(this.form.el);
+    this.$el.modal();
+    return this;
   }
 });
 
@@ -40,8 +54,18 @@ App.Views.ItemCreateForm = Backbone.View.extend({
     this.list = options.list;
     this.render();
   },
+  getModel: function(list) {
+    var arr = this.$el.serializeArray();
+    var model = new App.Models.Item();
+    for (i in arr) {
+      model.set(arr[i].name, arr[i].value);
+    }
+    model.set('list', list.get('name'));
+    return model;
+  },
   render: function() {
-    this.$el.html(this.template(this.list.toJSON()));
+    var form = this.template(this.list.toJSON());
+    this.setElement(form);
     return this;
   }
 });

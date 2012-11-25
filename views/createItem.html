@@ -9,7 +9,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-      <button class="btn btn-primary">Save</button>
+      <button class="btn btn-primary submit">Save</button>
     </div>
   </div>
 </script>
@@ -21,7 +21,7 @@
       <div class="control-group">
         <label class="control-label" for="input<%= f.name %>"><%= f.name %></label>
         <div class="controls">
-          <input type="text" id="input<%= f.name %>" placeholder="Enter <%= f.name %>...">
+          <input type="text" name="<%= f.name %>" id="input<%= f.name %>" placeholder="Enter <%= f.type %>...">
         </div>
       </div>
     <% }) %>
