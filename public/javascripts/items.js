@@ -13,7 +13,7 @@ App.Items = Backbone.Collection.extend({
 });
 
 App.ItemView = Backbone.View.extend({
-  tagName: 'li',
+  tagName: 'tr',
   className: 'item',
   template: _.template("default template"),
   events: {

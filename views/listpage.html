@@ -17,9 +17,18 @@
       <ul>
       </ul>
     </div>
-    <div class="span8">
-      <ul id="items">
-      </ul>
+    <div class="span10">
+      <table class="table table-hover table-condensed table-striped">
+        <thead>
+          <% _.each(fields, function(f) { %>
+          <th>
+            <%= f.name %>
+          </th>
+          <% }) %>
+        </thead>
+        <tbody id="items">
+        </tbody>
+      </table>
     </div>
   </div>
 

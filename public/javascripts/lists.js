@@ -5,11 +5,11 @@ App.List = Backbone.Model.extend({
       return html;
     } else {
       var fields = this.get('fields');
-      return "<%= " + fields[0].name + " %>";
+      // return "<%= " + fields[0].name + " %>";
       
-      // return _.map(fields, function(f) {
-      //   return "<%= " + f.name + " %>";
-      // }).join(', ');
+      return _.map(fields, function(f) {
+        return "<td><%= " + f.name + " %></td>";
+      }).join('');
     }
   }
 });
@@ -48,7 +48,7 @@ App.ListView = Backbone.View.extend({
 });
 
 App.ListsView = Backbone.View.extend({
-  template: _.template('<div><a href="#">create new</a><ul class="lists"></ul></div>'),
+  template: _.template('<div><a href="#">create new</a><table class="lists"></table></div>'),
 
   render: function() {
     var $el = this.$el;
