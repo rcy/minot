@@ -33,11 +33,8 @@ App.ItemView = Backbone.View.extend({
 });
 
 App.ItemsView = Backbone.View.extend({
-  template: _.template('<ul></ul>'),
   render: function() {
     console.log('itemsview render', this.$el);
-    var $el = this.$el;
-    $el.html(this.template());
     this.collection.forEach(function(model) {
       var itemView = new App.ItemView({model: model, template: this.itemTemplate});
       itemView.render();

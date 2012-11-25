@@ -1,7 +1,6 @@
 App.ListPage = Backbone.View.extend({
-  template: _.template('<h1><%= name %></h1><hr><div id="items"></div>'),
+  template: _.template($("#listpage").html()),
   initialize: function(itemsCollection) {
-    console.log('init App.ListPage');
     this.render();
     this.itemsView = new App.ItemsView({
       el: "#items", 

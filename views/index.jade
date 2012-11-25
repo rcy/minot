@@ -1,10 +1,21 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  .navbar
+    .navbar-inner
+      a.brand minot
+      .navbar-form.pull-left
+        input(type="text", placeholder="Search")
+        button.btn
+          .icon-search 
+
+  .container-fluid
+    #main
+
+  include listpage.html
 
   script(src="javascripts/vendor/jquery.js")
+  script(src="bootstrap/js/bootstrap.js")
   script(src="javascripts/vendor/underscore.js")
   script(src="javascripts/vendor/backbone.js")
   script(src="javascripts/app.js")

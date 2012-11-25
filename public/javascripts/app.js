@@ -4,7 +4,7 @@ window.App = {
 
   start: function() {
     this.data.lists = new App.Lists();
-    cview = new App.ListsView({el: 'body', collection: this.data.lists})
+    cview = new App.ListsView({el: '#main', collection: this.data.lists})
     this.data.lists.fetch();
   },
 
@@ -12,6 +12,6 @@ window.App = {
     this.data.list = list;
     this.data.items = new App.Items([], {list: list.get('name')});
     this.data.items.fetch();
-    this.data.page = new App.ListPage({el: 'body', model: list});
+    this.data.page = new App.ListPage({el: '#main', model: list});
   }
 }
