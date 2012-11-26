@@ -61,6 +61,13 @@ app.get('/api/lists/:list/items', function(req, res) {
   })
 });
 
+app.post('/api/lists/:list/items', function(req, res) {
+  minot.itemAdd(req.params.list, req.body, function(result) {
+    console.log(result);
+    res.send(result);
+  });
+});
+
 // start server
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

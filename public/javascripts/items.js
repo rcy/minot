@@ -1,4 +1,12 @@
-App.Models.Item = Backbone.Model.extend();
+App.Models.Item = Backbone.Model.extend({
+  initialize: function() {
+    var list = this.get('list');
+    if (!list) {
+      throw "error: model: list must be defined";
+    }
+    this.url = '/api/lists/' + list + '/items';
+  }
+});
 
 App.Collections.Items = Backbone.Collection.extend({
   model: App.Models.Item,
@@ -7,7 +15,7 @@ App.Collections.Items = Backbone.Collection.extend({
   },
   initialize: function(models, options) {
     this.list = options.list;
-    this.url = '/api/lists/'+this.list+'/items';
+    this.url = '/api/lists/' + this.list + '/items';
     return this;
   }
 });
@@ -33,17 +41,22 @@ App.Views.Item = Backbone.View.extend({
 });
 
 App.Views.Items = Backbone.View.extend({
-  render: function() {
-    console.log('itemsview render', this.$el);
-    this.collection.forEach(function(model) {
-      var itemView = new App.Views.Item({model: model, template: this.itemTemplate});
-      itemView.render();
-      this.$el.append(itemView.el);
-    }, this);
-    return this;
-  },
   initialize: function(options) {
     this.itemTemplate = _.template(options.itemTemplateHTML);
     this.collection.on('reset', this.render, this);
+    this.collection.on('add', this.addItem, this);
+  },
+  render: function() {
+    console.log('itemsview render', this.$el);
+    this.collection.forEach(function(model) {
+      this.addItem(model);
+    }, this);
+    return this;
+  },
+  addItem: function(model) {
+    console.log('addItem:', model);
+    var itemView = new App.Views.Item({model: model, template: this.itemTemplate});
+    itemView.render();
+    this.$el.prepend(itemView.el);
   }
 });

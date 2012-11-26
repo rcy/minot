@@ -6,7 +6,7 @@ App.Models.List = Backbone.Model.extend({
     } else {
       var fields = this.get('fields');
       return _.map(fields, function(f) {
-        return "<td><%= " + f.name + " %></td>";
+        return "<td><%- " + f.name + " %></td>";
       }).join('');
     }
   }
@@ -23,7 +23,7 @@ App.Collections.Lists = Backbone.Collection.extend({
 App.Views.List = Backbone.View.extend({
   tagName: 'li',
   className: 'list',
-  template: _.template('<a href="#"><%= name %></a>'),
+  template: _.template('<a href="#"><%- name %></a>'),
 
   events: {
     "click a": "click"

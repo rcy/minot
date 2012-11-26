@@ -34,9 +34,18 @@ App.Views.ModalItemCreate = Backbone.View.extend({
     $(e.currentTarget).find('input:first').focus();
   },
   submit: function() {
-    var item = this.form.getModel(this.model);
-    console.log('serialize:', item);
-    item.save();
+    var model = new App.Models.Item(this.form.serialize());
+    var $popup = this.$el;
+
+    App.data.items.create(model, {
+      wait: true, 
+      success: function() { 
+        $popup.modal('hide'); 
+      },
+      error: function() { 
+        alert('save error!'); 
+      }
+    });
   },
   render: function() {
     var $popup = $(this.template(this.model.toJSON()));
@@ -54,14 +63,13 @@ App.Views.ItemCreateForm = Backbone.View.extend({
     this.list = options.list;
     this.render();
   },
-  getModel: function(list) {
+  serialize: function() {
     var arr = this.$el.serializeArray();
-    var model = new App.Models.Item();
+    var obj = {list: this.list.get('name')};
     for (i in arr) {
-      model.set(arr[i].name, arr[i].value);
+      obj[arr[i].name] = arr[i].value;
     }
-    model.set('list', list.get('name'));
-    return model;
+    return obj;
   },
   render: function() {
     var form = this.template(this.list.toJSON());
