@@ -12,8 +12,10 @@ block content
   .container-fluid
     #main
 
+  include catalogpage.html
   include listpage.html
   include createItem.html
+  include createList.html
 
   script(src="javascripts/vendor/jquery.js")
   script(src="bootstrap/js/bootstrap.js")
@@ -22,7 +24,8 @@ block content
   script(src="javascripts/app.js")
   script(src="javascripts/lists.js")
   script(src="javascripts/items.js")
-  script(src="javascripts/pages.js")
+  script(src="javascripts/page.list.js")
+  script(src="javascripts/page.catalog.js")
 
   script
     App.start()

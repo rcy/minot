@@ -1,4 +1,5 @@
 App.Models.List = Backbone.Model.extend({
+  url: '/api/lists',
   itemTemplateHTML: function() {
     var html = this.get('itemTemplateHTML');
     if (html) {
@@ -23,7 +24,7 @@ App.Collections.Lists = Backbone.Collection.extend({
 App.Views.List = Backbone.View.extend({
   tagName: 'li',
   className: 'list',
-  template: _.template('<a href="#"><%- name %></a>'),
+  template: _.template('<a href="#"><i class="icon-list-alt"></i> <%- name %></a>'),
 
   events: {
     "click a": "click"
@@ -41,24 +42,22 @@ App.Views.List = Backbone.View.extend({
   render: function() {
     this.$el.html(this.template(this.model.toJSON()));
     return this;
-  }
+  },
 });
 
 App.Views.Lists = Backbone.View.extend({
-  template: _.template('<div><a href="#">create new</a><table class="lists"></table></div>'),
+  initialize: function(options) {
+    this.collection.on('reset', this.render, this);
+  },
 
   render: function() {
-    var $el = this.$el;
-    $el.html(this.template());
+    // var $el = this.$el;
+    // $el.html(this.template());
     this.collection.forEach(function(model) {
       var listView = new App.Views.List({model: model});
       listView.render();
-      this.$el.find('.lists').append(listView.el);
+      this.$el.append(listView.el);
     }, this);
     return this;
   },
-
-  initialize: function(options) {
-    this.collection.on('reset', this.render, this);
-  }
 });

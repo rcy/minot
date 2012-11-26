@@ -1,3 +1,14 @@
+Backbone.View.prototype.close = function() {
+  console.log('close view', this);
+  // thanks http://lostechies.com/derickbailey/2011/09/15/zombies-run-managing-page-transitions-in-backbone-apps/
+  this.remove();
+  this.unbind();
+  
+  if (this.onClose){
+    this.onClose();
+  }
+}
+
 window.App = {
   Views: {},
   Models: {},
@@ -6,16 +17,27 @@ window.App = {
   data: {
   },
 
+  showPage: function(view) {
+    if (this.data.page){
+      this.data.page.close();
+    }
+    this.data.page = view;
+    this.data.page.render();
+    $("#main").html(this.data.page.el);
+  },
+
   start: function() {
     this.data.lists = new App.Collections.Lists();
-    cview = new App.Views.Lists({el: '#main', collection: this.data.lists})
     this.data.lists.fetch();
+
+    this.showPage(new App.Views.CatalogPage({collection: this.data.lists}))
   },
 
   visitList: function(list) {
     this.data.list = list;
     this.data.items = new App.Collections.Items([], {list: list.get('name')});
     this.data.items.fetch();
-    this.data.page = new App.Views.ListPage({el: '#main', model: list});
-  }
+
+    this.showPage(new App.Views.ListPage({model: list}));
+  },
 }

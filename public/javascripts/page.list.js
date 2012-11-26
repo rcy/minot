@@ -1,12 +1,6 @@
 App.Views.ListPage = Backbone.View.extend({
   template: _.template($("#listpage-template").html()),
   initialize: function(itemsCollection) {
-    this.render();
-    this.itemsView = new App.Views.Items({
-      el: "#items", 
-      collection: App.data.items, 
-      itemTemplateHTML: this.model.itemTemplateHTML()
-    });
   },
   events: {
     "click button.create": "create"
@@ -18,6 +12,11 @@ App.Views.ListPage = Backbone.View.extend({
   },
   render: function() {
     this.$el.html(this.template(this.model.toJSON()));
+    this.itemsView = new App.Views.Items({
+      el: this.$el.find(".items"), 
+      collection: App.data.items, 
+      itemTemplateHTML: this.model.itemTemplateHTML()
+    });
     return this;
   }
 });
@@ -25,9 +24,11 @@ App.Views.ListPage = Backbone.View.extend({
 App.Views.ModalItemCreate = Backbone.View.extend({
   template: _.template($("#createItemModal-template").html()),
   initialize: function(options) {
+    console.log('modal ITEM create');
   },
   events: {
     "click button.submit": "submit",
+    "submit form": "submit",
     "shown": "modalReady"
   },
   modalReady: function(e) {

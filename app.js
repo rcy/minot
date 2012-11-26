@@ -51,7 +51,7 @@ app.post('/api/lists', function(req, res) {
   minot.listCreate({name: req.body.name,
                     fields: req.body.fields,
                     callback: function(result) {
-                      res.send(result.result, result.response);
+                      res.send(result, 201); // NOTE: this might already exist
                     }});
 });
 
