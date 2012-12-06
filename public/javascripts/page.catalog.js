@@ -6,7 +6,6 @@ App.Views.CatalogPage = Backbone.View.extend({
     "click button.create": "create"
   },
   create: function() {
-    console.log('create list');
     this.modal.render();
   },
   render: function() {
@@ -19,10 +18,6 @@ App.Views.CatalogPage = Backbone.View.extend({
     return this;
   },
   onClose: function() {
-    console.log('close: CatalogPage');
-  //   this.remove();
-  //   this.unbind();
-
     this.modal.close();
     this.listsView.close();
   }
@@ -31,7 +26,6 @@ App.Views.CatalogPage = Backbone.View.extend({
 App.Views.ModalListCreate = Backbone.View.extend({
   template: _.template($("#createListModal-template").html()),
   initialize: function(options) {
-    console.log('modal LIST create');
   },
   events: {
     "click button.submit": "submit",
