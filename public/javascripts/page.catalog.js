@@ -28,14 +28,14 @@ App.Views.ModalListCreate = Backbone.View.extend({
   initialize: function(options) {
   },
   events: {
-    "click button.submit": "submit",
     "submit form": "submit",
     "shown": "modalReady"
   },
   modalReady: function(e) {
     $(e.currentTarget).find('input:first').focus();
   },
-  submit: function() {
+  submit: function(e) {
+    e.preventDefault();
     var model = new App.Models.List();
     var arr = this.$el.find('form').serializeArray();
     var obj = {};
@@ -45,13 +45,17 @@ App.Views.ModalListCreate = Backbone.View.extend({
     // add a default field to start
     obj['fields'] = [{name: 'item', type: 'string'}];
 
+    var $popup = this.$el;
     model.save(obj, {
       wait: true, 
       success: function() { 
-        alert('created');
+        $popup.on('hidden', function() {
+          App.visitList(model);
+        });
+        $popup.modal('hide');
       },
-      error: function() { 
-        alert('save error!'); 
+      error: function(x) { 
+        console.log('save error!',x);
       }
     });
   },
