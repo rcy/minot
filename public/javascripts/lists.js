@@ -18,6 +18,9 @@ App.Collections.Lists = Backbone.Collection.extend({
   url: '/api/lists',
   parse: function(response) {
     return response.lists;
+  },
+  comparator: function(list) {
+    return list.get('name');
   }
 });
 
