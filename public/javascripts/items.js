@@ -23,7 +23,7 @@ App.Collections.Items = Backbone.Collection.extend({
 App.Views.Item = Backbone.View.extend({
   tagName: 'tr',
   className: 'item',
-  template: _.template("default template"),
+  template: Handlebars.compile("default template"),
   events: {
     "click": "click"
   },
@@ -42,7 +42,7 @@ App.Views.Item = Backbone.View.extend({
 
 App.Views.Items = Backbone.View.extend({
   initialize: function(options) {
-    this.itemTemplate = _.template(options.itemTemplateHTML);
+    this.itemTemplate = Handlebars.compile(options.itemTemplateHTML);
     this.collection.on('reset', this.render, this);
     this.collection.on('add', this.addItem, this);
   },

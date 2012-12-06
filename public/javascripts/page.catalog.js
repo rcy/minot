@@ -1,5 +1,5 @@
 App.Views.CatalogPage = Backbone.View.extend({
-  template: _.template($("#catalogpage-template").html()),
+  template: Handlebars.compile($("#catalogpage-template").html()),
   initialize: function(itemsCollection) {
   },
   events: {
@@ -24,7 +24,7 @@ App.Views.CatalogPage = Backbone.View.extend({
 });
 
 App.Views.ModalListCreate = Backbone.View.extend({
-  template: _.template($("#createListModal-template").html()),
+  template: Handlebars.compile($("#createListModal-template").html()),
   initialize: function(options) {
   },
   events: {

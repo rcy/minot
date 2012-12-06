@@ -1,5 +1,5 @@
 App.Views.ListPage = Backbone.View.extend({
-  template: _.template($("#listpage-template").html()),
+  template: Handlebars.compile($("#listpage-template").html()),
   initialize: function(itemsCollection) {
   },
   events: {
@@ -22,7 +22,7 @@ App.Views.ListPage = Backbone.View.extend({
 });
 
 App.Views.ModalItemCreate = Backbone.View.extend({
-  template: _.template($("#createItemModal-template").html()),
+  template: Handlebars.compile($("#createItemModal-template").html()),
   initialize: function(options) {
     console.log('modal ITEM create');
   },
@@ -59,7 +59,7 @@ App.Views.ModalItemCreate = Backbone.View.extend({
 });
 
 App.Views.ItemCreateForm = Backbone.View.extend({
-  template: _.template($("#createItemForm-template").html()),
+  template: Handlebars.compile($("#createItemForm-template").html()),
   initialize: function(options) {
     this.list = options.list;
     this.render();
