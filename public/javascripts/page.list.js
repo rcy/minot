@@ -3,12 +3,20 @@ App.Views.ListPage = Backbone.View.extend({
   initialize: function(itemsCollection) {
   },
   events: {
-    "click button.create": "create"
+    "click button.create": "create",
+    "click .destroy": "destroy"
   },
   create: function() {
     console.log('create', this.model);
     var modal = new App.Views.ModalItemCreate({model: this.model});
     modal.render();
+  },
+  destroy: function() {
+    if (confirm('Are you sure you want to delete "'+this.model.get('name')+'" forever?'))
+      this.model.destroy({wait: true,
+                          success: function(model, response) {
+                          }
+                         });
   },
   render: function() {
     this.$el.html(this.template(this.model.toJSON()));

@@ -55,6 +55,13 @@ app.post('/api/lists', function(req, res) {
                     }});
 });
 
+app.del('/api/lists/:id', function(req, res) {
+  minot.listDestroy({id: req.params.id},
+                    function(result) {
+                      res.send(204);
+                    });
+});
+
 app.get('/api/lists/:list/items', function(req, res) {
   minot.listItems(req.params.list, function(items) {
     res.send({'items': items});

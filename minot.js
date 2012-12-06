@@ -101,6 +101,10 @@ exports.listCreate = function(options) {
   });
 }
 
+exports.listDestroy = function(options, callback) {
+  db.table('lists').get(options.id).del().run(callback);
+}
+
 exports.itemAdd = function(list, doc, callback) {
   doc.list = list; // TODO: make sure list exists, validate fields
   db.table('items').insert(doc).run(function(result) {

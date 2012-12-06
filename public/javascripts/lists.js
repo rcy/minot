@@ -1,5 +1,5 @@
 App.Models.List = Backbone.Model.extend({
-  url: '/api/lists',
+  urlRoot: '/api/lists',
   itemTemplateHTML: function() {
     var html = this.get('itemTemplateHTML');
     if (html) {
