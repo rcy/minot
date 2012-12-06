@@ -27,14 +27,14 @@ App.Views.ModalItemCreate = Backbone.View.extend({
     console.log('modal ITEM create');
   },
   events: {
-    "click button.submit": "submit",
     "submit form": "submit",
     "shown": "modalReady"
   },
   modalReady: function(e) {
     $(e.currentTarget).find('input:first').focus();
   },
-  submit: function() {
+  submit: function(e) {
+    e.preventDefault();
     var model = new App.Models.Item(this.form.serialize());
     var $popup = this.$el;
 
@@ -52,7 +52,7 @@ App.Views.ModalItemCreate = Backbone.View.extend({
     var $popup = $(this.template(this.model.toJSON()));
     this.setElement($popup);
     this.form = new App.Views.ItemCreateForm({list: this.model});
-    this.$el.find('.modal-body').html(this.form.el);
+    this.$el.find('.modal-form-container').html(this.form.el);
     this.$el.modal();
     return this;
   }
