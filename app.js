@@ -57,11 +57,11 @@ app.get('/api/lists/:id', function(req, res) {
 });
 
 app.post('/api/lists', function(req, res) {
-  minot.listCreate({name: req.body.name,
-                    fields: req.body.fields,
-                    callback: function(result) {
-                      res.send(result, 201); // NOTE: this might already exist
-                    }});
+  minot.listCreate({ name: req.body.name,
+                     fields: req.body.fields },
+                   function(result) {
+                     res.send(result, 201); // NOTE: this might already exist
+                   });
 });
 
 app.del('/api/lists/:id', function(req, res) {
@@ -72,7 +72,6 @@ app.del('/api/lists/:id', function(req, res) {
 });
 
 app.put('/api/lists/:id', function(req, res) {
-  console.log(req.body.fields);
   minot.listUpdate(req.params.id,
                    {
                      fields: req.body.fields
@@ -82,15 +81,14 @@ app.put('/api/lists/:id', function(req, res) {
                    });
 });
 
-app.get('/api/lists/:list/items', function(req, res) {
-  minot.listItems(req.params.list, function(items) {
+app.get('/api/lists/:id/items', function(req, res) {
+  minot.listItems(req.params.id, function(items) {
     res.send({'items': items});
   })
 });
 
-app.post('/api/lists/:list/items', function(req, res) {
-  minot.itemAdd(req.params.list, req.body, function(result) {
-    console.log(result);
+app.post('/api/lists/:id/items', function(req, res) {
+  minot.itemAdd(req.params.id, req.body, function(result) {
     res.send(result);
   });
 });

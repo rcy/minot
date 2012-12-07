@@ -14,8 +14,8 @@ App.Collections.Items = Backbone.Collection.extend({
     return response.items;
   },
   initialize: function(models, options) {
-    this.list = options.list;
-    this.url = '/api/lists/' + this.list + '/items';
+    this.listId = options.listId;
+    this.url = '/api/lists/' + this.listId + '/items';
     return this;
   }
 });

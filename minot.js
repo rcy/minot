@@ -36,12 +36,11 @@ exports.listFetchByName = function(name, callback) {
   });
 };  
 
-exports.listCreate = function(options) {
+exports.listCreate = function(options, callback) {
   options || (options = {});
   var owner = options.owner || "anonymous";
   var fields = options.fields || [];
   var name = options.name;
-  var callback = options.callback;
 
   if (!name) {
     throw "name required";
@@ -72,8 +71,8 @@ exports.listDestroy = function(id, callback) {
   db.table('lists').get(id).del().run(callback);
 }
 
-exports.itemAdd = function(list, doc, callback) {
-  doc.list = list; // TODO: make sure list exists, validate fields
+exports.itemAdd = function(listId, doc, callback) {
+  doc.listId = listId; // TODO: make sure list exists, validate fields
   db.table('items').insert(doc).run(function(result) {
     console.log('itemAdd: ', result);
     var id = result.generated_keys[0];
@@ -85,8 +84,8 @@ exports.itemGet = function(id, callback) {
   db.table('items').get(id).run(callback);
 }
 
-exports.listItems = function(list, callback) {
-  db.table('items').filter(r('list').eq(list)).run().collect(callback);
+exports.listItems = function(list_id, callback) {
+  db.table('items').filter(r('listId').eq(listId)).run().collect(callback);
 }
 
 exports.lists = function(callback) {
