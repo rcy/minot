@@ -4,7 +4,7 @@ App.Models.Item = Backbone.Model.extend({
     if (!list) {
       throw "error: model: list must be defined";
     }
-    this.url = '/api/lists/' + list + '/items';
+    this.urlRoot = '/api/lists/' + list + '/items';
   }
 });
 

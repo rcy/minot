@@ -47,6 +47,15 @@ app.get('/api/lists', function(req, res) {
   });
 });
 
+app.get('/api/lists/:id', function(req, res) {
+  minot.listGet(req.params.id, function(list) {
+    if (list)
+      res.send(list);
+    else
+      res.send(404);
+  })
+});
+
 app.post('/api/lists', function(req, res) {
   minot.listCreate({name: req.body.name,
                     fields: req.body.fields,
@@ -56,10 +65,21 @@ app.post('/api/lists', function(req, res) {
 });
 
 app.del('/api/lists/:id', function(req, res) {
-  minot.listDestroy({id: req.params.id},
+  minot.listDestroy(req.params.id,
                     function(result) {
                       res.send(204);
                     });
+});
+
+app.put('/api/lists/:id', function(req, res) {
+  console.log(req.body.fields);
+  minot.listUpdate(req.params.id,
+                   {
+                     fields: req.body.fields
+                   },
+                   function(result) {
+                     res.send(result, 201);
+                   });
 });
 
 app.get('/api/lists/:list/items', function(req, res) {
