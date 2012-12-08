@@ -35,7 +35,7 @@ window.App = {
 
   visitList: function(list) {
     this.data.list = list;
-    this.data.items = new App.Collections.Items([], {list: list.get('name')});
+    this.data.items = new App.Collections.Items([], {listId: list.id});
     this.data.items.fetch();
 
     this.showPage(new App.Views.ListPage({model: list}));

@@ -1,23 +1,15 @@
 var express = require('express')
   , routes = require('./routes')
   , http = require('http')
-  , path = require('path')
-  , minot = require('./minot');
+  , path = require('path');
+
+var Minot = require('./minot');
+var minot = null;
+(new Minot).connect({db: 'rethinkdb', name:'development'}, function(connection) {
+  minot = connection;
+});
 
 var app = express();
-
-function apiFormatParser() {
-  return function(req, res, next) {
-    var match = req.url.match(/^(\/api\/.+)\.(.+)$/);
-    if (match) {
-      req.url = match[1];
-      req.format = match[2];
-    } else {
-      req.format = 'json';
-    }
-    next();
-  }
-}
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
@@ -26,7 +18,6 @@ app.configure(function(){
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
-  app.use(apiFormatParser());
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
@@ -37,8 +28,6 @@ app.configure('development', function(){
 });
 
 app.get('/', routes.index);
-
-minot.connect();
 
 // api routes
 app.get('/api/lists', function(req, res) {
@@ -91,6 +80,13 @@ app.post('/api/lists/:id/items', function(req, res) {
   minot.itemAdd(req.params.id, req.body, function(result) {
     res.send(result);
   });
+});
+
+app.del('/api/lists/:id', function(req, res) {
+  minot.itemDestroy(req.params.id,
+                    function(result) {
+                      res.send(204);
+                    });
 });
 
 // start server

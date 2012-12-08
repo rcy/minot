@@ -74,7 +74,7 @@ App.Views.ItemCreateForm = Backbone.View.extend({
   },
   serialize: function() {
     var arr = this.$el.serializeArray();
-    var obj = {list: this.list.get('name')};
+    var obj = {listId: this.list.id};
     for (i in arr) {
       obj[arr[i].name] = arr[i].value;
     }

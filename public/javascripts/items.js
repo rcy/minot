@@ -1,10 +1,11 @@
 App.Models.Item = Backbone.Model.extend({
   initialize: function() {
-    var list = this.get('list');
-    if (!list) {
+    var listId = this.get('listId');
+    console.log(this);
+    if (!listId) {
       throw "error: model: list must be defined";
     }
-    this.urlRoot = '/api/lists/' + list + '/items';
+    this.urlRoot = '/api/lists/' + listId + '/items';
   }
 });
 
