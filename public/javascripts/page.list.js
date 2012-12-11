@@ -1,13 +1,14 @@
 App.Views.ListPage = Backbone.View.extend({
   template: Handlebars.compile($("#listpage-template").html()),
   initialize: function(itemsCollection) {
+    this.model.on('change', this.render, this);
   },
   events: {
     "click button.create": "create",
-    "click .destroy": "destroy"
+    "click .destroy": "destroy",
+    "click .add-column": "addColumn"
   },
   create: function() {
-    console.log('create', this.model);
     var modal = new App.Views.ModalItemCreate({model: this.model});
     modal.render();
   },
@@ -17,6 +18,10 @@ App.Views.ListPage = Backbone.View.extend({
                           success: function(model, response) {
                           }
                          });
+  },
+  addColumn: function() {
+    var modal = new App.Views.ModalColumnEdit({model: this.model});
+    modal.render();
   },
   render: function() {
     this.$el.html(this.template(this.model.toJSON()));
@@ -29,10 +34,50 @@ App.Views.ListPage = Backbone.View.extend({
   }
 });
 
+App.Views.ModalBase = Backbone.View.extend({
+  events: {
+    "shown": "modalReady",
+    "submit form": "submit"
+  },
+  modalReady: function(e) {
+    $(e.currentTarget).find('input:first').focus();
+  },
+  submit: function(e) {
+    e.preventDefault();
+    alert('submit');
+  }
+});
+
+App.Views.ModalColumnEdit = App.Views.ModalBase.extend({
+  template: Handlebars.compile($("#editColumnModal-template").html()),
+  render: function() {
+    var $popup = $(this.template(this.model.toJSON()));
+    this.setElement($popup);
+    // this.form = new App.Views.ItemCreateForm({list: this.model});
+    // this.$el.find('.modal-form-container').html(this.form.el);
+    this.$el.modal();
+    return this;
+  },
+  submit: function(e) {
+    e.preventDefault();
+
+    var arr = this.$el.find('form').serializeArray();
+    var obj = {type:'string'};
+    for (i in arr) {
+      obj[arr[i].name] = arr[i].value;
+    }
+    
+    var fields = this.model.get('fields');
+    fields.push(obj);
+    this.model.save({fields: fields})
+
+    this.$el.modal('hide'); 
+  }
+});
+
 App.Views.ModalItemCreate = Backbone.View.extend({
   template: Handlebars.compile($("#createItemModal-template").html()),
   initialize: function(options) {
-    console.log('modal ITEM create');
   },
   events: {
     "submit form": "submit",

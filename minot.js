@@ -79,7 +79,9 @@ RTConn.prototype.listDestroy = function(id, callback) {
   this.db.table('lists').get(id).del().run(callback);
 }
 
-//RTConn.prototype.listUpdate
+RTConn.prototype.listUpdate = function(id, doc, callback) {
+  this.db.table('lists').get(id).update({fields: doc.fields}).run(callback);
+}
 
 // ----------------- ITEMS
 RTConn.prototype.listItems = function(id, callback) {
