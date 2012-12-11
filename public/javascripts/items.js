@@ -1,7 +1,6 @@
 App.Models.Item = Backbone.Model.extend({
   initialize: function() {
     var listId = this.get('listId');
-    console.log(this);
     if (!listId) {
       throw "error: model: list must be defined";
     }
@@ -48,14 +47,12 @@ App.Views.Items = Backbone.View.extend({
     this.collection.on('add', this.addItem, this);
   },
   render: function() {
-    console.log('itemsview render', this.$el);
     this.collection.forEach(function(model) {
       this.addItem(model);
     }, this);
     return this;
   },
   addItem: function(model) {
-    console.log('addItem:', model);
     var itemView = new App.Views.Item({model: model, template: this.itemTemplate});
     itemView.render();
     this.$el.prepend(itemView.el);

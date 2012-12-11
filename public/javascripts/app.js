@@ -1,5 +1,4 @@
 Backbone.View.prototype.close = function() {
-  console.log('close view', this);
   // thanks http://lostechies.com/derickbailey/2011/09/15/zombies-run-managing-page-transitions-in-backbone-apps/
   this.remove();
   this.unbind();

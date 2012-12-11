@@ -54,8 +54,8 @@ App.Views.ModalListCreate = Backbone.View.extend({
         });
         $popup.modal('hide');
       },
-      error: function(x) { 
-        console.log('save error!',x);
+      error: function(obj) { 
+        alert('save error!'+obj);
       }
     });
   },
