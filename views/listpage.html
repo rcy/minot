@@ -7,11 +7,23 @@
     </div>
 
     <div class="span10">
+
       <div class="row-fluid">
-        <div class="span2 offset10">
-          <a class="destroy" href="#"><i class="icon-trash"></i> delete list</a>
+        <div class="span1 offset11">
+
+          <!-- actions pulldown -->
+          <div class="btn-group pull-right">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+              <i class="icon-cog"></i> <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              <li> <a class="edit_fields" href="#"><i class="icon-pencil"></i> add or edit columns</a> </li>
+              <li class="divider"></li>
+              <li> <a class="destroy" href="#"><i class="icon-trash"></i> delete this list</a> </li>
+            </ul>
         </div>
       </div>
+
       <table class="table table-hover table-condensed table-striped">
         <thead>
           {{#each fields}}
