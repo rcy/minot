@@ -1,38 +1,42 @@
 <script id="listpage-template" type="text/template">
   <div class="row-fluid">
+    <h1>{{name}}</h1>
 
-    <div class="span2">
-      <h2 style="margin-top: 0em">{{name}}</h2>
-      <button class="btn create"><i class="icon-plus-sign"></i> Add item</button>
+    <!-- actions pulldown -->
+    <div class="btn-group">
+      <button class="btn create"><i class="icon-plus-sign"></i> New Item</button>
+      <button class="btn dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+        <li> <a class="add-column" href="#"><i class="icon-plus"></i> add column</a> </li>
+        <li class="divider"></li>
+        <li> <a class="destroy" href="#"><i class="icon-trash"></i> delete this list</a> </li>
+      </ul>
     </div>
+  </div>
 
-    <div class="span10">
-
-      <div class="row-fluid">
-        <div class="span1 offset11">
-
-          <!-- actions pulldown -->
-          <div class="btn-group pull-right">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-              <i class="icon-cog"></i> <span class="caret"></span>
+  <br />
+  <div class="row-fluid">
+    <table class="table table-hover table-condensed table-striped table-bordered">
+      <thead>
+        {{#each fields}}
+        <th>
+          <div class="btn-group">
+            <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" href="#">
+              {{name}}
             </a>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-              <li> <a class="add-column" href="#"><i class="icon-plus"></i> add column</a> </li>
-              <li class="divider"></li>
-              <li> <a class="destroy" href="#"><i class="icon-trash"></i> delete this list</a> </li>
+            <ul class="dropdown-menu">
+              <li><a href="#" class="add-column"><i class="icon-plus"></i> insert column</a></li>
+              <!-- <li class="divider"></li> -->
+              <!-- <li><a href="#" class=""><i class="icon-trash"></i> delete column</a></li> -->
             </ul>
-        </div>
-      </div>
-
-      <table class="table table-hover table-condensed table-striped">
-        <thead>
-          {{#each fields}}
-          <th>{{name}}</th>
-          {{/each}}
-        </thead>
-        <tbody class="items">
-        </tbody>
-      </table>
-    </div>
+          </div>
+        </th>
+        {{/each}}
+      </thead>
+      <tbody class="items">
+      </tbody>
+    </table>
   </div>
 </script>

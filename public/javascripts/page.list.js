@@ -59,6 +59,14 @@ App.Views.ModalBase = Backbone.View.extend({
 App.Views.ModalViewItem = App.Views.ModalBase.extend({
   template: Handlebars.compile($("#itemViewModal-template").html()),
 
+  events: {
+    "click .google-search": "googleSearch"
+  },
+
+  googleSearch: function() {
+    window.open('http://google.com/search?tbm=isch&q='+this.model.get('item'),'_blank');
+  },
+
   initialize: function(options) {
     this.listModel = options.listModel;
   },
@@ -66,7 +74,6 @@ App.Views.ModalViewItem = App.Views.ModalBase.extend({
   render: function() {
     console.log('itemModel:', this.model);
     console.log('listModel:', this.listModel);
-    // var $popup = $(this.template(this.listModel.toJSON()));
 
     var obj = [];
 

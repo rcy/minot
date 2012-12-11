@@ -1,3 +1,7 @@
 table.no-lines td {
     border-top: none
 }
+
+tbody.items:hover {
+    cursor:pointer;
+}
