@@ -1,7 +1,6 @@
 App.Models.List = Backbone.Model.extend({
   urlRoot: '/api/lists',
   itemTemplateHTML: function() {
-    console.log('computing itemTemplateHTML')
     var html = this.get('itemTemplateHTML');
     if (html) {
       return html;
@@ -11,6 +10,9 @@ App.Models.List = Backbone.Model.extend({
         return '<td>{{' + f.name + '}}</td>';
       }).join('');
     }
+  },
+  mainField: function() {
+    return this.get('fields')[0].name;
   }
 });
 

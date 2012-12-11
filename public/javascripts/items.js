@@ -28,7 +28,6 @@ App.Views.Item = Backbone.View.extend({
     "click": "click"
   },
   click: function(e) {
-    console.log('you clicked', this.model);
     App.dispatcher.trigger('item:view', this.model);
   },
   render: function() {
@@ -38,7 +37,8 @@ App.Views.Item = Backbone.View.extend({
   initialize: function(options) {
     this.template = options.template;
     this.model.on('change', this.render, this);
-  }
+    this.model.on('destroy', this.close, this);
+  },
 });
 
 App.Views.Items = Backbone.View.extend({
@@ -57,5 +57,5 @@ App.Views.Items = Backbone.View.extend({
     var itemView = new App.Views.Item({model: model, template: this.itemTemplate});
     itemView.render();
     this.$el.prepend(itemView.el);
-  }
+  },
 });

@@ -70,7 +70,7 @@ RTConn.prototype.listCreate = function(doc, callback) {
 
   if (!obj.name) throw "need a name"; // validate list properly
 
-  validateFields(fields);
+  validateListFields(obj.fields);
 
   db.table('lists').insert(obj).run(function(result) {
     db.table('lists').get(result.generated_keys[0]).run(callback);
@@ -114,4 +114,8 @@ RTConn.prototype.itemAdd = function(listId, doc, callback) {
 
 RTConn.prototype.itemGet = function(id, callback) {
   this.db.table('items').get(id).run(callback);
+}
+
+RTConn.prototype.itemDestroy = function(id, callback) {
+  this.db.table('items').get(id).del().run(callback);
 }

@@ -1,7 +1,6 @@
 App.Views.ListPage = Backbone.View.extend({
   template: Handlebars.compile($("#listpage-template").html()),
   initialize: function(itemsCollection) {
-    console.log('initialize listpage');
     this.model.bind('change', this.render, this);
     App.dispatcher.bind('item:view', this.viewItem, this);
   },
@@ -12,7 +11,6 @@ App.Views.ListPage = Backbone.View.extend({
     "click .destroy-column": "destroyColumn"
   },
   viewItem: function(model) {
-    console.log('got event, item:view', model);
     var modal = new App.Views.ModalViewItem({listModel: this.model, model: model});
     modal.render();
   },
@@ -36,12 +34,10 @@ App.Views.ListPage = Backbone.View.extend({
     if (confirm('Are you sure you want to permanently delete column "'+this.model.get('name')+'"?')) {
       var del_id = $(e.currentTarget).data('id');
       var fields = _.reject(this.model.get('fields'), function(f) { return f.id === del_id; });
-      console.log('new fields:', fields);
       this.model.save({fields: fields});
     }
   },
   render: function() {
-    console.log('page.list.js: App.Views.ListPage: render()');
     this.$el.html(this.template(this.model.toJSON()));
     this.itemsView = new App.Views.Items({
       el: this.$el.find(".items"), 
@@ -69,22 +65,11 @@ App.Views.ModalBase = Backbone.View.extend({
 App.Views.ModalViewItem = App.Views.ModalBase.extend({
   template: Handlebars.compile($("#itemViewModal-template").html()),
 
-  events: {
-    "click .google-search": "googleSearch"
-  },
-
-  googleSearch: function() {
-    window.open('http://google.com/search?tbm=isch&q='+this.model.get('item'),'_blank');
-  },
-
   initialize: function(options) {
     this.listModel = options.listModel;
   },
 
   render: function() {
-    console.log('itemModel:', this.model);
-    console.log('listModel:', this.listModel);
-
     var obj = [];
 
     _.each(this.listModel.get('fields'),
@@ -99,6 +84,18 @@ App.Views.ModalViewItem = App.Views.ModalBase.extend({
     this.$el.modal();
     return this;
   },
+
+  events: {
+    "click .destroy": "destroy"
+  },
+
+  destroy: function() {
+    if (confirm('are you sure you want to delete "' + this.model.get(this.listModel.mainField()) + '"?')) {
+      this.model.destroy();
+      this.$el.modal('hide');
+    }
+  }
+
 });
 
 App.Views.ModalColumnEdit = App.Views.ModalBase.extend({
