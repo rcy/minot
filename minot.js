@@ -70,6 +70,8 @@ RTConn.prototype.listCreate = function(doc, callback) {
 
   if (!obj.name) throw "need a name"; // validate list properly
 
+  validateFields(fields);
+
   db.table('lists').insert(obj).run(function(result) {
     db.table('lists').get(result.generated_keys[0]).run(callback);
   });
@@ -79,7 +81,19 @@ RTConn.prototype.listDestroy = function(id, callback) {
   this.db.table('lists').get(id).del().run(callback);
 }
 
+// from https://gist.github.com/1308368
+var uuid = function(a,b){for(b=a='';a++<36;b+=a*51&52?(a^15?8^Math.random()*(a^20?16:4):4).toString(16):'-');return b}
+
+function validateListFields(arr) {
+  for (var i in arr) {
+    if (!arr[i].id)
+      arr[i].id = uuid();
+  }
+}
+
 RTConn.prototype.listUpdate = function(id, doc, callback) {
+  validateListFields(doc.fields);
+
   this.db.table('lists').get(id).update({fields: doc.fields}).run(callback);
 }
 

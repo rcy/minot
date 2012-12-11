@@ -8,7 +8,8 @@ App.Views.ListPage = Backbone.View.extend({
   events: {
     "click button.create": "create",
     "click .destroy": "destroy",
-    "click .add-column": "addColumn"
+    "click .add-column": "addColumn",
+    "click .destroy-column": "destroyColumn"
   },
   viewItem: function(model) {
     console.log('got event, item:view', model);
@@ -29,6 +30,15 @@ App.Views.ListPage = Backbone.View.extend({
   addColumn: function() {
     var modal = new App.Views.ModalColumnEdit({model: this.model});
     modal.render();
+  },
+  destroyColumn: function(e) {
+    e.preventDefault();
+    if (confirm('Are you sure you want to permanently delete column "'+this.model.get('name')+'"?')) {
+      var del_id = $(e.currentTarget).data('id');
+      var fields = _.reject(this.model.get('fields'), function(f) { return f.id === del_id; });
+      console.log('new fields:', fields);
+      this.model.save({fields: fields});
+    }
   },
   render: function() {
     console.log('page.list.js: App.Views.ListPage: render()');

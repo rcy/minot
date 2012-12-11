@@ -23,13 +23,13 @@
         {{#each fields}}
         <th>
           <div class="btn-group">
-            <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" href="#">
+            <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" href="#" title="{{id}}">
               {{name}}
             </a>
             <ul class="dropdown-menu">
               <li><a href="#" class="add-column"><i class="icon-plus"></i> insert column</a></li>
-              <!-- <li class="divider"></li> -->
-              <!-- <li><a href="#" class=""><i class="icon-trash"></i> delete column</a></li> -->
+              <li class="divider"></li>
+              <li><a href="#" class="destroy-column" data-id="{{id}}"><i class="icon-trash"></i> delete column</a></li>
             </ul>
           </div>
         </th>
