@@ -16,6 +16,8 @@ window.App = {
   data: {
   },
 
+  dispatcher: _.clone(Backbone.Events),
+
   showPage: function(view) {
     if (this.data.page){
       this.data.page.close();

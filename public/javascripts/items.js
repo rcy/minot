@@ -28,7 +28,8 @@ App.Views.Item = Backbone.View.extend({
     "click": "click"
   },
   click: function(e) {
-    App.popup(this.model);
+    console.log('you clicked', this.model);
+    App.dispatcher.trigger('item:view', this.model);
   },
   render: function() {
     this.$el.html(this.template(this.model.toJSON()));

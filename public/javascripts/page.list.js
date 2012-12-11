@@ -3,11 +3,17 @@ App.Views.ListPage = Backbone.View.extend({
   initialize: function(itemsCollection) {
     console.log('initialize listpage');
     this.model.bind('change', this.render, this);
+    App.dispatcher.bind('item:view', this.viewItem, this);
   },
   events: {
     "click button.create": "create",
     "click .destroy": "destroy",
     "click .add-column": "addColumn"
+  },
+  viewItem: function(model) {
+    console.log('got event, item:view', model);
+    var modal = new App.Views.ModalViewItem({listModel: this.model, model: model});
+    modal.render();
   },
   create: function() {
     var modal = new App.Views.ModalItemCreate({model: this.model});
@@ -48,6 +54,34 @@ App.Views.ModalBase = Backbone.View.extend({
     e.preventDefault();
     alert('submit');
   }
+});
+
+App.Views.ModalViewItem = App.Views.ModalBase.extend({
+  template: Handlebars.compile($("#itemViewModal-template").html()),
+
+  initialize: function(options) {
+    this.listModel = options.listModel;
+  },
+
+  render: function() {
+    console.log('itemModel:', this.model);
+    console.log('listModel:', this.listModel);
+    // var $popup = $(this.template(this.listModel.toJSON()));
+
+    var obj = [];
+
+    _.each(this.listModel.get('fields'),
+           function(field) {
+             obj.push({name: field.name, type: field.type, value: this.model.get(field.name)});
+           }, this);
+
+    var keyValue = obj.shift().value;
+    var $popup = $(this.template({listName: this.listModel.get('name'), keyValue: keyValue, fields: obj}));
+
+    this.setElement($popup);
+    this.$el.modal();
+    return this;
+  },
 });
 
 App.Views.ModalColumnEdit = App.Views.ModalBase.extend({
