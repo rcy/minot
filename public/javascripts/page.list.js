@@ -1,7 +1,8 @@
 App.Views.ListPage = Backbone.View.extend({
   template: Handlebars.compile($("#listpage-template").html()),
   initialize: function(itemsCollection) {
-    this.model.on('change', this.render, this);
+    console.log('initialize listpage');
+    this.model.bind('change', this.render, this);
   },
   events: {
     "click button.create": "create",
@@ -24,12 +25,13 @@ App.Views.ListPage = Backbone.View.extend({
     modal.render();
   },
   render: function() {
+    console.log('page.list.js: App.Views.ListPage: render()');
     this.$el.html(this.template(this.model.toJSON()));
     this.itemsView = new App.Views.Items({
       el: this.$el.find(".items"), 
       collection: App.data.items, 
       itemTemplateHTML: this.model.itemTemplateHTML()
-    });
+    }).render();
     return this;
   }
 });
@@ -53,8 +55,6 @@ App.Views.ModalColumnEdit = App.Views.ModalBase.extend({
   render: function() {
     var $popup = $(this.template(this.model.toJSON()));
     this.setElement($popup);
-    // this.form = new App.Views.ItemCreateForm({list: this.model});
-    // this.$el.find('.modal-form-container').html(this.form.el);
     this.$el.modal();
     return this;
   },
@@ -67,10 +67,9 @@ App.Views.ModalColumnEdit = App.Views.ModalBase.extend({
       obj[arr[i].name] = arr[i].value;
     }
     
-    var fields = this.model.get('fields');
+    var fields = _.clone(this.model.get('fields'));
     fields.push(obj);
-    this.model.save({fields: fields})
-
+    this.model.save({fields: fields});
     this.$el.modal('hide'); 
   }
 });

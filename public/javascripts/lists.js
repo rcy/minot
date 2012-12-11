@@ -1,6 +1,7 @@
 App.Models.List = Backbone.Model.extend({
   urlRoot: '/api/lists',
   itemTemplateHTML: function() {
+    console.log('computing itemTemplateHTML')
     var html = this.get('itemTemplateHTML');
     if (html) {
       return html;
@@ -34,7 +35,6 @@ App.Views.List = Backbone.View.extend({
   },
 
   initialize: function(options) {
-    this.model.on('change', this.render, this);
   },
 
   click: function() {
