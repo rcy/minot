@@ -82,11 +82,29 @@ App.Views.ModalViewItem = App.Views.ModalBase.extend({
 
     this.setElement($popup);
     this.$el.modal();
+    var model = this.model;
+    this.$el.find('.editable').editable({ 
+      toggle:'manual',
+      url: function(params) {
+        console.log('setting:',params.name, 'to', params.value, 'for', model.id);
+        model.set(params.name, params.value);
+        model.save();
+      }
+    });
     return this;
   },
 
   events: {
-    "click .destroy": "destroy"
+    "click .destroy": "destroy",
+    "click .editable": "editField"
+  },
+
+  editField: function(e) {
+    console.log('editField',e);
+    e.preventDefault();
+
+    $(e.currentTarget).editable('option', 'type', 'text');
+    $(e.currentTarget).editable('show');
   },
 
   destroy: function() {

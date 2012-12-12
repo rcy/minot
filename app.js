@@ -89,6 +89,14 @@ app.del('/api/lists/:lid/items/:id', function(req, res) {
                     });
 });
 
+app.put('/api/lists/:lid/items/:id', function(req, res) {
+  minot.itemUpdate(req.params.id,
+                   req.body,    // TODO: validate this
+                   function(result) {
+                     res.send(201);
+                   });
+});
+
 app.del('/api/lists/:id', function(req, res) {
   minot.itemDestroy(req.params.id,
                     function(result) {

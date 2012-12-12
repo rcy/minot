@@ -119,3 +119,7 @@ RTConn.prototype.itemGet = function(id, callback) {
 RTConn.prototype.itemDestroy = function(id, callback) {
   this.db.table('items').get(id).del().run(callback);
 }
+
+RTConn.prototype.itemUpdate = function(id, doc,callback) {
+  this.db.table('items').get(id).update(doc).run(callback);
+}
