@@ -74,7 +74,7 @@ App.Views.ModalViewItem = App.Views.ModalBase.extend({
 
     _.each(this.listModel.get('fields'),
            function(field) {
-             obj.push({name: field.name, type: field.type, value: this.model.get(field.name)});
+             obj.push({id: this.model.id, name: field.name, type: field.type, value: this.model.get(field.name)});
            }, this);
 
     var keyValue = obj.shift().value;
