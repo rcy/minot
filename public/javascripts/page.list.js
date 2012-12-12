@@ -77,8 +77,8 @@ App.Views.ModalViewItem = App.Views.ModalBase.extend({
              obj.push({id: this.model.id, name: field.name, type: field.type, value: this.model.get(field.name)});
            }, this);
 
-    var keyValue = obj.shift().value;
-    var $popup = $(this.template({listName: this.listModel.get('name'), keyValue: keyValue, fields: obj}));
+    var titleField = obj.shift(); // titles the model, not in regular list of fields in body
+    var $popup = $(this.template({listName: this.listModel.get('name'), titleField: titleField, fields: obj}));
 
     this.setElement($popup);
     this.$el.modal();

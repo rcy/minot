@@ -3,11 +3,9 @@
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
       <h3 id="myModalLabel">
-        {{#if keyValue}}
-          {{keyValue}}
-        {{else}}
-          untitled
-        {{/if}}
+        {{#with titleField}}
+        <span data-name="{{name}}" class="editable" title="{{id}}">{{value}}</span>
+        {{/with}}
       </h3>
     </div>
 
@@ -25,7 +23,7 @@
               </td>
 
               <td>
-                <a data-type="text" data-name="{{name}}" class="editable" title="{{id}}" href="#">{{value}}</a>
+                <a data-name="{{name}}" class="editable" title="{{id}}" href="#">{{value}}</a>
               </td>
 
             </tr>
