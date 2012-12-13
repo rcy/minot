@@ -3,9 +3,9 @@ var express = require('express')
   , http = require('http')
   , path = require('path');
 
-var Minot = require('./minot');
+var Minot = require('./minot/minot');
 var minot = null;
-(new Minot).connect({db: 'rethinkdb', name:'development'}, function(connection) {
+(new Minot).connect({db: 'mongodb', name:'development'}, function(connection) {
   minot = connection;
 });
 
@@ -62,11 +62,9 @@ app.del('/api/lists/:id', function(req, res) {
 
 app.put('/api/lists/:id', function(req, res) {
   minot.listUpdate(req.params.id,
-                   {
-                     fields: req.body.fields
-                   },
+                   req.body,
                    function(result) {
-                     res.send(result, 201);
+                     res.send(result, 200);
                    });
 });
 
@@ -93,7 +91,7 @@ app.put('/api/lists/:lid/items/:id', function(req, res) {
   minot.itemUpdate(req.params.id,
                    req.body,    // TODO: validate this
                    function(result) {
-                     res.send(201);
+                     res.send(result, 200);
                    });
 });
 

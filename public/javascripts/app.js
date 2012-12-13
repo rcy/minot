@@ -8,6 +8,10 @@ Backbone.View.prototype.close = function() {
   }
 }
 
+$(document).ajaxError(function(e, xhr, options) {
+  alert('ajaxError');
+});
+
 window.App = {
   Views: {},
   Models: {},

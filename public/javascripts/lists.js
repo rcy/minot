@@ -1,4 +1,5 @@
 App.Models.List = Backbone.Model.extend({
+  idAttribute: "_id",
   urlRoot: '/api/lists',
   itemTemplateHTML: function() {
     var html = this.get('itemTemplateHTML');
@@ -56,8 +57,6 @@ App.Views.Lists = Backbone.View.extend({
   },
 
   render: function() {
-    // var $el = this.$el;
-    // $el.html(this.template());
     this.collection.forEach(function(model) {
       var listView = new App.Views.List({model: model});
       listView.render();

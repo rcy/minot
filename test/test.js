@@ -1,4 +1,4 @@
-var Minot = require('../minot');
+var Minot = require('../minot/minot');
 var assert = require('assert');
 
 describe("Minot", function() {
@@ -6,7 +6,7 @@ describe("Minot", function() {
   var conn;
 
   before(function(done) {
-    minot.connect({db: 'rethinkdb', name:'test'}, function(connection) {
+    minot.connect({db: 'mongodb', name:'test'}, function(connection) {
       conn = connection;
       done();
     })

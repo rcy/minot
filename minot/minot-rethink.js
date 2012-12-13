@@ -1,25 +1,9 @@
 var r = require('rethinkdb');
-var Minot = function() {};
-
-Minot.prototype.connect = function(options, callback) {
-  var self = this;
-  if (options.db === 'rethinkdb') {
-    var conn = new RTConn();
-    conn.connect(options, function() {
-      callback(conn);
-    });
-  } else {
-    throw 'unsupported db'
-  }
-}
-
-module.exports = exports = Minot;
-
-var RTConn = function() {
+var MinotRT = function() {
   this.db = null;
 };
   
-RTConn.prototype.connect = function(options, callback) {
+MinotRT.prototype.connect = function(options, callback) {
   var name = options.name || 'test';
   var self = this;
   r.connect({host:options.host, port:options.port}, function() {
@@ -39,7 +23,7 @@ RTConn.prototype.connect = function(options, callback) {
   });
 }
 
-RTConn.prototype.clear = function(callback) {
+MinotRT.prototype.clear = function(callback) {
   var db = this.db;
   db.tableDrop('lists').run(function() {
     db.tableDrop('items').run(function() {
@@ -52,15 +36,15 @@ RTConn.prototype.clear = function(callback) {
   });
 }
 
-RTConn.prototype.lists = function(callback) {
+MinotRT.prototype.lists = function(callback) {
   this.db.table('lists').run().collect(callback);
 }
 
-RTConn.prototype.listGet = function(id, callback) {
+MinotRT.prototype.listGet = function(id, callback) {
   this.db.table('lists').get(id).run(callback);
 }
 
-RTConn.prototype.listCreate = function(doc, callback) {
+MinotRT.prototype.listCreate = function(doc, callback) {
   var db = this.db;
   var obj = {
     name: doc.name,
@@ -77,7 +61,7 @@ RTConn.prototype.listCreate = function(doc, callback) {
   });
 }
 
-RTConn.prototype.listDestroy = function(id, callback) {
+MinotRT.prototype.listDestroy = function(id, callback) {
   this.db.table('lists').get(id).del().run(callback);
 }
 
@@ -91,18 +75,18 @@ function validateListFields(arr) {
   }
 }
 
-RTConn.prototype.listUpdate = function(id, doc, callback) {
+MinotRT.prototype.listUpdate = function(id, doc, callback) {
   validateListFields(doc.fields);
 
   this.db.table('lists').get(id).update({fields: doc.fields}).run(callback);
 }
 
 // ----------------- ITEMS
-RTConn.prototype.listItems = function(id, callback) {
+MinotRT.prototype.listItems = function(id, callback) {
   this.db.table('items').filter(r('listId').eq(id)).run().collect(callback);
 }
 
-RTConn.prototype.itemAdd = function(listId, doc, callback) {
+MinotRT.prototype.itemAdd = function(listId, doc, callback) {
   doc.listId = listId;
   var self = this
   this.db.table('items').insert(doc).run(function(result) {
@@ -112,14 +96,16 @@ RTConn.prototype.itemAdd = function(listId, doc, callback) {
   });
 }
 
-RTConn.prototype.itemGet = function(id, callback) {
+MinotRT.prototype.itemGet = function(id, callback) {
   this.db.table('items').get(id).run(callback);
 }
 
-RTConn.prototype.itemDestroy = function(id, callback) {
+MinotRT.prototype.itemDestroy = function(id, callback) {
   this.db.table('items').get(id).del().run(callback);
 }
 
-RTConn.prototype.itemUpdate = function(id, doc,callback) {
+MinotRT.prototype.itemUpdate = function(id, doc,callback) {
   this.db.table('items').get(id).update(doc).run(callback);
 }
+
+module.exports = exports = MinotRT;

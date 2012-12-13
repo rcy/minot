@@ -1,4 +1,5 @@
 App.Models.Item = Backbone.Model.extend({
+  idAttribute: "_id",
   initialize: function() {
     var listId = this.get('listId');
     if (!listId) {

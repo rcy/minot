@@ -6,7 +6,7 @@ App.Views.ListPage = Backbone.View.extend({
   },
   events: {
     "click button.create": "create",
-    "click .destroy": "destroy",
+    "click .destroy": "destroyItem",
     "click .add-column": "addColumn",
     "click .destroy-column": "destroyColumn"
   },
@@ -18,10 +18,14 @@ App.Views.ListPage = Backbone.View.extend({
     var modal = new App.Views.ModalItemCreate({model: this.model});
     modal.render();
   },
-  destroy: function() {
+  destroyItem: function() {
     if (confirm('Are you sure you want to delete "'+this.model.get('name')+'" forever?'))
       this.model.destroy({wait: true,
-                          success: function(model, response) {
+                          success: function(model, response, options) {
+                            console.log(response);
+                          },
+                          error: function(model, response, options) {
+                            alert(response);
                           }
                          });
   },
@@ -88,7 +92,15 @@ App.Views.ModalViewItem = App.Views.ModalBase.extend({
       url: function(params) {
         console.log('setting:',params.name, 'to', params.value, 'for', model.id);
         model.set(params.name, params.value);
-        model.save();
+        model.save(null, {wait:true, 
+                          error:function(model, xhr, options) {
+                            alert('save error');
+                            console.log('save error', model, xhr, options);
+                          },
+                          success:function(model, xhr, options) {
+                            console.log('save success', model, response, options);
+                          }
+                         });
       }
     });
     return this;
@@ -135,7 +147,7 @@ App.Views.ModalColumnEdit = App.Views.ModalBase.extend({
     
     var fields = _.clone(this.model.get('fields'));
     fields.push(obj);
-    this.model.save({fields: fields});
+    this.model.save({fields: fields}, {wait:true});
     this.$el.modal('hide'); 
   }
 });
