@@ -3,17 +3,8 @@
     <h1>{{name}}</h1>
 
     <!-- actions pulldown -->
-    <div class="btn-group">
-      <button class="btn create"><i class="icon-plus-sign"></i> Add</button>
-      <button class="btn dropdown-toggle" data-toggle="dropdown">
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-        <li> <a class="add-column" href="#"><i class="icon-plus"></i> add column</a> </li>
-        <li class="divider"></li>
-        <li> <a class="destroy" href="#"><i class="icon-trash"></i> delete this list</a> </li>
-      </ul>
-    </div>
+    <button class="btn btn-primary create"><i class="icon-plus-sign"></i> Add</button>
+    <button class="btn pull-right add-column"><i class="icon-plus"></i> add column</button>
   </div>
 
   <br />
@@ -27,9 +18,7 @@
               {{name}}
             </a>
             <ul class="dropdown-menu">
-              <li><a href="#" class="add-column"><i class="icon-plus"></i> insert column</a></li>
-              <li class="divider"></li>
-              <li><a href="#" class="destroy-column" data-id="{{id}}"><i class="icon-trash"></i> delete column</a></li>
+              <a href="#" class="destroy-column" data-id="{{id}}"><i class="icon-trash"></i> delete column</a>
             </ul>
           </div>
         </th>
@@ -38,5 +27,8 @@
       <tbody class="items">
       </tbody>
     </table>
+
+    <button class="btn btn-link pull-right destroy"><i class="icon-trash"></i> delete this list</button>
+
   </div>
 </script>
