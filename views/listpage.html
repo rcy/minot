@@ -1,11 +1,14 @@
 <script id="listpage-template" type="text/template">
   <div class="row">
     <h1>{{name}}</h1>
-    <button class="btn btn-success create"><i class="icon-plus"></i> New Item</button>
   </div>
 
   <div class="row">
-    <button class="btn btn-link pull-right add-column"><i class="icon-plus-sign"></i> Add Column</button>
+    <button class="btn btn-success create"><i class="icon-plus-sign icon-white"></i> New Item</button>
+  </div>
+
+  <div class="row">
+    <a href="#" class="btn btn-link pull-right add-column"><i class="icon-th"></i> Add Column</a>
     <table class="table table-hover table-condensed table-striped table-bordered">
       <thead>
         {{#each fields}}
