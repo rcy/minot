@@ -5,7 +5,8 @@ var express = require('express')
 
 var Minot = require('./minot/minot');
 var minot = null;
-(new Minot).connect({db: 'mongodb', name:'development'}, function(connection) {
+var mongo_url = process.env['MONGOHQ_URL'] || 'mongodb://localhost:27017/development';
+(new Minot).connect({db: 'mongodb', url:mongo_url}, function(connection) {
   minot = connection;
 });
 

@@ -6,7 +6,7 @@ describe("Minot", function() {
   var conn;
 
   before(function(done) {
-    minot.connect({db: 'mongodb', name:'test'}, function(connection) {
+    minot.connect({db: 'mongodb', url:'mongodb://localhost:27017/test'}, function(connection) {
       conn = connection;
       done();
     })

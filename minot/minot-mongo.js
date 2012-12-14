@@ -8,7 +8,7 @@ var MinotMongo = function() {
   
 MinotMongo.prototype.connect = function(options, callback) {
   var self = this;
-  MongoClient.connect("mongodb://localhost:27017/" + options.name, function(err, db) {
+  MongoClient.connect(options.url, function(err, db) {
     if(!err) {
       console.log("mongodb: we are connected");
       self.db = db;
