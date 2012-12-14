@@ -15,9 +15,9 @@
     <div class="modal-body">
       {{#each fields}}
       <div class="control-group">
-        <label class="control-label" for="input{{ name }}">{{ name }}</label>
+        <label class="control-label" for="{{id}}">{{ name }}</label>
         <div class="controls">
-          <input type="text" name="{{ name }}" id="input{{ name }}" value="" placeholder="Enter {{ type }}...">
+          <input type="text" name="{{id}}" id="{{id}}" value="" placeholder="Enter {{type}}...">
         </div>
       </div>
       {{/each}}

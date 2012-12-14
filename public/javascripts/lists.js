@@ -8,7 +8,7 @@ App.Models.List = Backbone.Model.extend({
     } else {
       var fields = this.get('fields');
       return _.map(fields, function(f) {
-        return '<td>{{' + f.name + '}}</td>';
+        return '<td>{{' + f.id + '}}</td>';
       }).join('');
     }
   },

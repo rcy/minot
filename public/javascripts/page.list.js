@@ -78,7 +78,7 @@ App.Views.ModalViewItem = App.Views.ModalBase.extend({
 
     _.each(this.listModel.get('fields'),
            function(field) {
-             obj.push({id: this.model.id, name: field.name, type: field.type, value: this.model.get(field.name)});
+             obj.push({id: field.id, name: field.name, type: field.type, value: this.model.get(field.id)});
            }, this);
 
     var titleField = obj.shift(); // titles the model, not in regular list of fields in body
@@ -98,7 +98,7 @@ App.Views.ModalViewItem = App.Views.ModalBase.extend({
                             console.log('save error', model, xhr, options);
                           },
                           success:function(model, xhr, options) {
-                            console.log('save success', model, response, options);
+                            //console.log('save success', model, xhr, options);
                           }
                          });
       }
