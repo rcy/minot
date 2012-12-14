@@ -6,7 +6,17 @@ App.Views.CatalogPage = Backbone.View.extend({
     "click button.create": "create"
   },
   create: function() {
-    this.modal.render();
+    var obj = {
+      name: 'untitled list',
+      fields: [{name: 'summary', type: 'string'}]
+    };
+    var model = new App.Models.List(obj);
+    model.save(null, {
+      wait: true, 
+      success: function() { 
+        App.visitList(model);
+      }
+    });
   },
   render: function() {
     this.$el.html(this.template());
@@ -14,55 +24,9 @@ App.Views.CatalogPage = Backbone.View.extend({
       el: this.$el.find('.items'),
       collection: App.data.lists
     });
-    this.modal = new App.Views.ModalListCreate();
     return this;
   },
   onClose: function() {
-    this.modal.close();
     this.listsView.close();
   }
-});
-
-App.Views.ModalListCreate = Backbone.View.extend({
-  template: Handlebars.compile($("#createListModal-template").html()),
-  initialize: function(options) {
-  },
-  events: {
-    "submit form": "submit",
-    "shown": "modalReady"
-  },
-  modalReady: function(e) {
-    $(e.currentTarget).find('input:first').focus();
-  },
-  submit: function(e) {
-    e.preventDefault();
-    var model = new App.Models.List();
-    var arr = this.$el.find('form').serializeArray();
-    var obj = {};
-    for (i in arr) {
-      obj[arr[i].name] = arr[i].value;
-    }
-    // add a default field to start
-    obj['fields'] = [{name: 'summary', type: 'string'}];
-
-    var $popup = this.$el;
-    model.save(obj, {
-      wait: true, 
-      success: function() { 
-        $popup.on('hidden', function() {
-          App.visitList(model);
-        });
-        $popup.modal('hide');
-      },
-      error: function(obj) { 
-        alert('save error!'+obj);
-      }
-    });
-  },
-  render: function() {
-    var $popup = $(this.template());
-    this.setElement($popup);
-    this.$el.modal();
-    return this;
-  },
 });
