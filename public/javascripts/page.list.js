@@ -30,8 +30,9 @@ App.Views.ListPage = Backbone.View.extend({
                          });
   },
   addColumn: function() {
-    var modal = new App.Views.ModalColumnEdit({model: this.model});
-    modal.render();
+    var fields = _.clone(this.model.get('fields'));
+    fields.push({name:'untitled', type:'string'});
+    this.model.save({fields: fields}, {wait:true});
   },
   destroyColumn: function(e) {
     e.preventDefault();
@@ -126,30 +127,6 @@ App.Views.ModalViewItem = App.Views.ModalBase.extend({
     }
   }
 
-});
-
-App.Views.ModalColumnEdit = App.Views.ModalBase.extend({
-  template: Handlebars.compile($("#editColumnModal-template").html()),
-  render: function() {
-    var $popup = $(this.template(this.model.toJSON()));
-    this.setElement($popup);
-    this.$el.modal();
-    return this;
-  },
-  submit: function(e) {
-    e.preventDefault();
-
-    var arr = this.$el.find('form').serializeArray();
-    var obj = {type:'string'};
-    for (i in arr) {
-      obj[arr[i].name] = arr[i].value;
-    }
-    
-    var fields = _.clone(this.model.get('fields'));
-    fields.push(obj);
-    this.model.save({fields: fields}, {wait:true});
-    this.$el.modal('hide'); 
-  }
 });
 
 App.Views.ModalItemCreate = Backbone.View.extend({
