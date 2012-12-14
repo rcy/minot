@@ -1,14 +1,11 @@
 <script id="listpage-template" type="text/template">
   <div class="row">
     <h1>{{name}}</h1>
-
-    <!-- actions pulldown -->
-    <button class="btn btn-primary create"><i class="icon-plus-sign"></i> Add</button>
-    <button class="btn pull-right add-column"><i class="icon-plus"></i> add column</button>
+    <button class="btn btn-success create"><i class="icon-plus"></i> New Item</button>
   </div>
 
-  <br />
   <div class="row">
+    <button class="btn btn-link pull-right add-column"><i class="icon-plus-sign"></i> Add Column</button>
     <table class="table table-hover table-condensed table-striped table-bordered">
       <thead>
         {{#each fields}}
@@ -27,8 +24,6 @@
       <tbody class="items">
       </tbody>
     </table>
-
-    <button class="btn btn-link pull-right destroy"><i class="icon-trash"></i> delete this list</button>
 
   </div>
 </script>
