@@ -43,7 +43,7 @@ App.Views.ModalListCreate = Backbone.View.extend({
       obj[arr[i].name] = arr[i].value;
     }
     // add a default field to start
-    obj['fields'] = [{name: 'item', type: 'string'}];
+    obj['fields'] = [{name: 'summary', type: 'string'}];
 
     var $popup = this.$el;
     model.save(obj, {
