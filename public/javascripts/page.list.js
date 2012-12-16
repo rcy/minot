@@ -22,7 +22,7 @@ App.Views.ListPage = Backbone.View.extend({
   },
   destroyItem: function() {
     if (confirm('Are you sure you want to delete "'+this.model.get('name')+'" forever?'))
-      this.model.destroy({wait: true,
+      this.model.destroy({wait: false,
                           success: function(model, response, options) {
                             console.log(response);
                           },
@@ -34,7 +34,7 @@ App.Views.ListPage = Backbone.View.extend({
   addColumn: function() {
     var fields = _.clone(this.model.get('fields'));
     fields.push({name:'untitled', type:'string'});
-    this.model.save({fields: fields}, {wait:true});
+    this.model.save({fields: fields}, {wait:false});
   },
   destroyColumn: function(e) {
     e.preventDefault();
@@ -63,7 +63,7 @@ App.Views.ListPage = Backbone.View.extend({
         var fieldID = params.name, newName = params.value;;
         console.log('setting field:',fieldID,'to', newName, 'in model', model.id);
         model.setFieldAttr(fieldID, 'name', newName);
-        model.save(null, {wait:true, 
+        model.save(null, {wait:false, 
                           error:function(model, xhr, options) {
                             alert('save error');
                             console.log('save error', model, xhr, options);
@@ -123,7 +123,7 @@ App.Views.ModalViewItem = App.Views.ModalBase.extend({
       url: function(params) {
         console.log('setting:',params.name, 'to', params.value, 'for', model.id);
         model.set(params.name, params.value);
-        model.save(null, {wait:true, 
+        model.save(null, {wait:false, 
                           error:function(model, xhr, options) {
                             alert('save error');
                             console.log('save error', model, xhr, options);
@@ -176,7 +176,7 @@ App.Views.ModalItemCreate = Backbone.View.extend({
     var $popup = this.$el;
 
     App.data.items.create(model, {
-      wait: true, 
+      wait: false, 
       success: function() { 
         $popup.modal('hide'); 
       },
