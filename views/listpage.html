@@ -13,12 +13,15 @@
       <thead>
         {{#each fields}}
         <th>
-          <div class="btn-group">
+          <span class="editable column-name" data-name="{{id}}">{{name}}</span>
+          <div class="btn-group pull-right">
             <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" href="#" title="{{id}}">
-              {{name}}
+              <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-              <a href="#" class="destroy-column" data-id="{{id}}"><i class="icon-trash"></i> delete column</a>
+              <li><a href="#" class="rename-column" data-id="{{id}}">Rename Column</a></li>
+              <li class="divider"></li>
+              <li><a href="#" class="destroy-column" data-id="{{id}}">Delete Column</a></li>
             </ul>
           </div>
         </th>

@@ -14,7 +14,14 @@ App.Models.List = Backbone.Model.extend({
   },
   mainField: function() {
     return this.get('fields')[0].name;
+  },
+  setFieldAttr: function(id, attr, value){
+    var fields = _.clone(this.get('fields'));
+    var field = _.find(fields, function(field) { return field.id === id });
+    field[attr] = value;
+    this.set('field', field);
   }
+
 });
 
 App.Collections.Lists = Backbone.Collection.extend({

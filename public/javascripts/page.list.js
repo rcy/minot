@@ -5,10 +5,12 @@ App.Views.ListPage = Backbone.View.extend({
     App.dispatcher.bind('item:view', this.viewItem, this);
   },
   events: {
-    "click button.create": "create",
+    "click .create": "create",
     "click .destroy": "destroyItem",
     "click .add-column": "addColumn",
-    "click .destroy-column": "destroyColumn"
+    "click .destroy-column": "destroyColumn",
+    "click .rename-column": "renameColumn",
+    "dblclick .column-name": "renameColumn"
   },
   viewItem: function(model) {
     var modal = new App.Views.ModalViewItem({listModel: this.model, model: model});
@@ -42,8 +44,36 @@ App.Views.ListPage = Backbone.View.extend({
       this.model.save({fields: fields});
     }
   },
+  renameColumn: function(e) {
+    console.log('renameColumn');
+    e.preventDefault();
+    setTimeout(function() {
+      var $colEl = $(e.currentTarget).parents('th').find('.column-name');
+      $colEl.editable('option', 'type', 'text');
+      $colEl.editable('show');
+    }, 0);
+  },
   render: function() {
+    var model = this.model;
     this.$el.html(this.template(this.model.toJSON()));
+    this.$el.find('.editable').editable({ 
+      toggle:'manual',
+      emptytext: '',
+      url: function(params) {
+        var fieldID = params.name, newName = params.value;;
+        console.log('setting field:',fieldID,'to', newName, 'in model', model.id);
+        model.setFieldAttr(fieldID, 'name', newName);
+        model.save(null, {wait:true, 
+                          error:function(model, xhr, options) {
+                            alert('save error');
+                            console.log('save error', model, xhr, options);
+                          },
+                          success:function(model, xhr, options) {
+                            //console.log('save success', model, xhr, options);
+                          }
+                         });
+      }
+    });
     this.itemsView = new App.Views.Items({
       el: this.$el.find(".items"), 
       collection: App.data.items, 

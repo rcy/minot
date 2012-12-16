@@ -6,7 +6,7 @@ App.Models.Item = Backbone.Model.extend({
       throw "error: model: list must be defined";
     }
     this.urlRoot = '/api/lists/' + listId + '/items';
-  }
+  },
 });
 
 App.Collections.Items = Backbone.Collection.extend({
