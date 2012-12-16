@@ -10,7 +10,7 @@ App.Views.ListPage = Backbone.View.extend({
     "click .add-column": "addColumn",
     "click .destroy-column": "destroyColumn",
     "click .rename-column": "renameColumn",
-    "dblclick .column-name": "renameColumn"
+    "click .column-name": "renameColumn"
   },
   viewItem: function(model) {
     var modal = new App.Views.ModalViewItem({listModel: this.model, model: model});
