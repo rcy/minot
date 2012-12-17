@@ -10,7 +10,8 @@ App.Views.ListPage = Backbone.View.extend({
     "click .add-column": "addColumn",
     "click .destroy-column": "destroyColumn",
     "click .rename-column": "renameColumn",
-    "click .column-name": "renameColumn"
+    "click .column-name": "renameColumn",
+    "click .list-name": "renameList"
   },
   viewItem: function(model) {
     var modal = new App.Views.ModalViewItem({listModel: this.model, model: model});
@@ -38,7 +39,7 @@ App.Views.ListPage = Backbone.View.extend({
   },
   destroyColumn: function(e) {
     e.preventDefault();
-    if (confirm('Are you sure you want to permanently delete column "'+this.model.get('name')+'"?')) {
+    if (confirm('Are you sure you want to permanently delete this column?')) {
       var del_id = $(e.currentTarget).data('id');
       var fields = _.reject(this.model.get('fields'), function(f) { return f.id === del_id; });
       this.model.save({fields: fields});
@@ -53,25 +54,29 @@ App.Views.ListPage = Backbone.View.extend({
       $colEl.editable('show');
     }, 0);
   },
+  renameList: function(e) {
+    e.preventDefault();
+    $(e.currentTarget).editable('option', 'type', 'text');
+    $(e.currentTarget).editable('show');
+  },
   render: function() {
     var model = this.model;
     this.$el.html(this.template(this.model.toJSON()));
-    this.$el.find('.editable').editable({ 
+    this.$el.find('.editable.column-name').editable({ 
       toggle:'manual',
       emptytext: '',
       url: function(params) {
-        var fieldID = params.name, newName = params.value;;
+        var fieldID = params.name, newName = params.value;
         console.log('setting field:',fieldID,'to', newName, 'in model', model.id);
         model.setFieldAttr(fieldID, 'name', newName);
-        model.save(null, {wait:false, 
-                          error:function(model, xhr, options) {
-                            alert('save error');
-                            console.log('save error', model, xhr, options);
-                          },
-                          success:function(model, xhr, options) {
-                            //console.log('save success', model, xhr, options);
-                          }
-                         });
+        model.save();
+      }
+    });
+    this.$el.find('.editable.list-name').editable({
+      toggle:'manual',
+      emptytext: 'No Title',
+      url: function(params) {
+        model.save({name: params.value});
       }
     });
     this.itemsView = new App.Views.Items({
