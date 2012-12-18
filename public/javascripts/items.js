@@ -18,6 +18,9 @@ App.Collections.Items = Backbone.Collection.extend({
     this.listId = options.listId;
     this.url = '/api/lists/' + this.listId + '/items';
     return this;
+  },
+  comparator: function(item) {
+    return item.id;
   }
 });
 
