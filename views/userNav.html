@@ -1,0 +1,40 @@
+<script id="user-nav" type="text/template">
+  {{#if name}}
+  <ul class="nav">
+    <li class="nav">
+      <a class="sign-out" href="#">{{name}}</a>
+    </li>
+  </ul>
+  {{else}}
+  <a href="/signup" class="btn btn-success sign-up">Sign Up</a>
+  <a class="btn btn-info sign-in">Log In</a>
+  {{/if}}
+</script>
+
+
+<script id="sign-in-modal-template" type="text/template">
+  <div id="sign-in-modal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="myModalLabel">Minot Log In</h3>
+    </div>
+
+    <div class="modal-body">
+      <form>
+        <fieldset>
+          <label for="email">Email</label>
+          <input type="email" name="email" />
+          <label for="password">Password</label>
+          <input type="password" name="password" />
+        </fieldset>
+        <fieldset>
+          <button class="btn btn-info">Login</button>
+        </fieldset>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <p>New here? <a href="/signup" class="register">Create an Account</a></p>
+    </div>
+  </div>
+</script>

@@ -35,6 +35,9 @@ window.App = {
     this.data.lists = new App.Collections.Lists();
     this.data.lists.fetch();
 
+    this.user = new App.Models.User({}) // get this from express
+    new App.Views.UserNavView({model: this.user, el: "#registration"}).render()
+
     this.showPage(new App.Views.CatalogPage({collection: this.data.lists}))
   },
 
@@ -46,3 +49,18 @@ window.App = {
     this.showPage(new App.Views.ListPage({model: list}));
   },
 }
+
+
+App.Views.ModalBase = Backbone.View.extend({
+  events: {
+    "shown": "modalReady",
+    "submit form": "submit"
+  },
+  modalReady: function(e) {
+    $(e.currentTarget).find('input:first').focus();
+  },
+  submit: function(e) {
+    e.preventDefault();
+    alert('submit');
+  }
+});

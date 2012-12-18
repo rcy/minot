@@ -88,20 +88,6 @@ App.Views.ListPage = Backbone.View.extend({
   }
 });
 
-App.Views.ModalBase = Backbone.View.extend({
-  events: {
-    "shown": "modalReady",
-    "submit form": "submit"
-  },
-  modalReady: function(e) {
-    $(e.currentTarget).find('input:first').focus();
-  },
-  submit: function(e) {
-    e.preventDefault();
-    alert('submit');
-  }
-});
-
 App.Views.ModalViewItem = App.Views.ModalBase.extend({
   template: Handlebars.compile($("#itemViewModal-template").html()),
 
