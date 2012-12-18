@@ -6,7 +6,7 @@ App.Views.ListPage = Backbone.View.extend({
   },
   events: {
     "click .create": "create",
-    "click .destroy": "destroyItem",
+    "click .destroy-list": "destroyList",
     "click .add-column": "addColumn",
     "click .destroy-column": "destroyColumn",
     "click .rename-column": "renameColumn",
@@ -21,11 +21,11 @@ App.Views.ListPage = Backbone.View.extend({
     var modal = new App.Views.ModalItemCreate({model: this.model});
     modal.render();
   },
-  destroyItem: function() {
+  destroyList: function() {
     if (confirm('Are you sure you want to delete "'+this.model.get('name')+'" forever?'))
       this.model.destroy({wait: false,
                           success: function(model, response, options) {
-                            console.log(response);
+                            window.location="/";
                           },
                           error: function(model, response, options) {
                             alert(response);
