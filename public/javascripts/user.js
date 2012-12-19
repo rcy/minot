@@ -29,5 +29,20 @@ App.Views.ModalSignIn = App.Views.ModalBase.extend({
     var $popup = $(this.template());
     this.setElement($popup);
     this.$el.modal();
+  },
+  submit: function(e) {
+    e.preventDefault();
+    var formData = this.$el.find('form').serialize();
+    $.ajax({ type: 'POST',
+             data: formData,
+             url: '/login',
+             success: function() {
+               alert('ok, welcome');
+             },
+             error: function() {
+               alert('something went wrong');
+               return false;
+             }
+           });
   }
 });

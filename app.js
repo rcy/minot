@@ -30,6 +30,17 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 
+app.post('/login', function(req, res) {
+  var email = req.body.email;
+  var password = req.body.password;
+  minot.authUser(email, password, function(err, user) {
+    if (err)
+      res.send(401); // FIXME: what is auth not ok status code?
+    else
+      res.send(user, 200); // FIXME: what is auth ok status code?
+  });
+});
+
 // api routes
 app.get('/api/lists', function(req, res) {
   minot.lists(function(lists) {

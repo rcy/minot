@@ -34,6 +34,16 @@ MinotMongo.prototype.clear = function(callback) {
   });
 }
 
+MinotMongo.prototype.authUser = function(email, password, callback) {
+  if (email === 'rcyeske@gmail.com') {
+    callback(null, {name: 'Ryan Yeske',
+                    email: 'rcyeske@gmail.com',
+                    _id: '123' });
+  } else {
+    callback({error: 'authentication failed'}, null);
+  }
+}
+
 MinotMongo.prototype.lists = function(callback) {
   this.db.collection('lists').find({}).toArray(function(err, result) {
     if (err) throw err;
