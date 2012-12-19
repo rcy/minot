@@ -7,7 +7,7 @@ App.Views.CatalogPage = Backbone.View.extend({
   },
   create: function() {
     var obj = {
-      name: 'untitled list',
+      name: 'new untitled list',
       fields: [{name: 'summary', type: 'string'}]
     };
     var model = new App.Models.List(obj);
