@@ -31,11 +31,11 @@ window.App = {
     $("#main").html(this.data.page.el);
   },
 
-  start: function() {
+  start: function(opts) {
     this.data.lists = new App.Collections.Lists();
     this.data.lists.fetch();
 
-    this.user = new App.Models.User({}) // get this from express
+    this.user = new App.Models.User(opts.user)
     new App.Views.UserNavView({model: this.user, el: "#registration"}).render()
 
     this.showPage(new App.Views.CatalogPage({collection: this.data.lists}))

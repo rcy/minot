@@ -1,13 +1,19 @@
 <script id="user-nav" type="text/template">
-  {{#if name}}
+  {{#if email}}
   <ul class="nav">
     <li class="nav">
-      <a class="sign-out" href="#">{{name}}</a>
+      <a href="/profile/{{_id}}">
+        <img src="{{gravatar_image_url}}" width="24" height="24" />
+        {{email}}
+      </a>
+    </li>
+    <li class="nav">
+      <a href="/logout" class="sign-out">Log out</a>
     </li>
   </ul>
   {{else}}
   <a href="/signup" class="btn btn-success sign-up">Sign Up</a>
-  <a class="btn btn-info sign-in">Log In</a>
+  <a href="/login" class="btn btn-info sign-in">Log In</a>
   {{/if}}
 </script>
 

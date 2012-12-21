@@ -4,7 +4,8 @@ var express = require('express')
   , path = require('path')
   , flash = require('connect-flash')
   , passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy;
+  , LocalStrategy = require('passport-local').Strategy
+  , crypto = require('crypto');
 
 var Minot = require('./minot/minot');
 var minot = null;
@@ -40,10 +41,23 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(id, done) {
   console.log('deserializeUser', id);
   minot.findUserById(id, function(user) {
-    console.log(user);
+    user.gravatar_image_url = gravatar_image_url(user.email, 'mm');
+    delete user.password;
     done(null, user);
   });
 });
+
+function gravatar_hash(_email) {
+  var email = _email.toLowerCase();
+  var hash = crypto.createHash('md5').update(email).digest("hex");
+  return hash;
+}
+function gravatar_image_url(_email, _default) {
+  return 'http://gravatar.com/avatar/' + gravatar_hash(_email) + '?d=' + _default;
+}
+function gravatar_profile_url(_email) {
+  return 'http://gravatar.com/' + gravatar_hash(_email);
+}
 
 var app = express();
 
@@ -69,6 +83,7 @@ app.configure('development', function(){
 });
 
 app.get('/', routes.index);
+
 app.get('/dummy', function(req,res) {
   res.send({'session': req.session,
             'user': req.user });
@@ -87,20 +102,23 @@ app.post('/signup', function(req, res) {
     if (err) {
       res.redirect('/signup');
     } else {
-      res.redirect('/');
+      req.login(user, function(err) {
+        if (err) throw err;
+        return res.redirect('/');
+      });
     }
   });
 });
 app.get('/logout', function(req,res) {
   req.logout();
-  res.redirect('/dummy');
+  res.redirect('/');
 });
 
 app.get('/login', function(req, res) {
   res.render('login', {title: 'Minot Login', message: req.flash('error')});
 });
 app.post('/login',
-         passport.authenticate('local', { successRedirect: '/dummy',
+         passport.authenticate('local', { successRedirect: '/',
                                           failureRedirect: '/login',
                                           failureFlash: true })
 );

@@ -9,7 +9,7 @@ App.Views.UserNavView = Backbone.View.extend({
     return this;
   },
   events: {
-    "click .sign-in": "signIn",
+//    "click .sign-in": "signIn", // uncomment to use login popup
     "click .sign-out": "signOut",
   },
   signIn: function(e) {
@@ -18,7 +18,7 @@ App.Views.UserNavView = Backbone.View.extend({
     modal.render();
   },
   signOut: function(e) {
-    alert('sign out');
+    window.location = '/logout';
   }
 });
 
