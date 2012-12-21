@@ -1,0 +1,41 @@
+extends layout
+
+block content
+  .container(style="padding-top: 50px")
+    .row
+      .span6.offset2.well
+        h1(style="text-align:center")= title
+        hr
+        form.form.form-horizontal(method="post")
+          .control-group.name
+            label.control-label(for="inputName") Name
+            .controls
+              input(type="text", id="inputName", name="name" )
+              .error-message.help-block
+
+          .control-group.email
+            label.control-label(for="inputEmail") Email
+            .controls
+              input(type="email", id="inputEmail", name="email" )
+              .error-message.help-block
+
+          .control-group.password
+            label.control-label(for="inputPassword") Password
+            .controls
+              input(type="password", id="inputPassword", name="password")
+              .error-message.help-block
+
+          .control-group
+            .controls
+              button.btn.btn-success(type="submit") Create Account
+
+          hr
+
+          .or-login.pull-right Already have an account?
+            a.btn.btn-link(href="/login") Login
+
+  script(src="javascripts/vendor/jquery.js")
+  script(src="bootstrap/js/bootstrap.js")
+  script(src="javascripts/signup.js")
+  script
+    populateForm(!{JSON.stringify(input)}, !{JSON.stringify(errors)});

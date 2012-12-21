@@ -1,6 +1,7 @@
 var mongo = require('mongodb');
 var MongoClient = mongo.MongoClient;
 var BSON = mongo.BSONPure;
+var passwordHash = require('password-hash');
 
 var MinotMongo = function() {
   this.db = null;
@@ -10,7 +11,7 @@ MinotMongo.prototype.connect = function(options, callback) {
   var self = this;
   MongoClient.connect(options.url, function(err, db) {
     if(!err) {
-      console.log("mongodb: we are connected");
+      console.log("mongodb: connected");
       self.db = db;
       callback();
     } else {
@@ -23,25 +24,55 @@ MinotMongo.prototype.clear = function(callback) {
   var db = this.db;
   db.dropCollection('lists', function(err, result) {
     db.dropCollection('items', function(err, result) {
-      db.createCollection('lists', function(err, result) {
-        if (err) throw err;
-        db.createCollection('items', function(err, result) {
-          if (err) throw err;
-          callback();
-        });
+      db.dropCollection('users', function(err, result) {
+        callback();
       });                      
     });
   });
 }
 
-MinotMongo.prototype.authUser = function(email, password, callback) {
-  if (email === 'rcyeske@gmail.com') {
-    callback(null, {name: 'Ryan Yeske',
-                    email: 'rcyeske@gmail.com',
-                    _id: '123' });
-  } else {
-    callback({error: 'authentication failed'}, null);
-  }
+MinotMongo.prototype.userCreate = function(doc, callback) {
+  var obj = {
+    name: doc.name,
+    email: doc.email,
+    password: passwordHash.generate(doc.password)
+  };
+  if (!obj.email) throw "email missing";
+  if (!obj.password) throw "password missing";
+
+  var users = this.db.collection('users');
+  users.findOne({email: obj.email}, function(err, result) {
+    if (err) throw err;
+
+    if (result) {
+      // user already exists
+      return callback({message: 'email already exists'}, null);
+    } else {
+      users.insert(obj, {w:1}, function(err, result) {
+        if (err) throw err;
+        return callback(null, result[0]);
+      });
+    }
+  });
+}
+
+MinotMongo.prototype.userPasswordAuth = function(user, password, callback) {
+  var hashedPassword = user.password;
+  return passwordHash.verify(password, hashedPassword);
+};
+
+MinotMongo.prototype.findUser = function(opts, callback) {
+  this.db.collection('users').findOne(opts, function(err, user) {
+    if (err) throw err;
+    callback(user);
+  });
+}
+
+MinotMongo.prototype.findUserById = function(id, callback) {
+  this.db.collection('users').findOne({_id: this.oid(id)}, function(err, user) {
+    if (err) throw err;
+    callback(user);
+  });
 }
 
 MinotMongo.prototype.lists = function(callback) {
@@ -52,7 +83,7 @@ MinotMongo.prototype.lists = function(callback) {
 }
 
 MinotMongo.prototype.oid = function(id) {
-  return new BSON.ObjectID(id);
+  return new BSON.ObjectID(id.toString());
 }
 
 MinotMongo.prototype.listGet = function(id, callback) {

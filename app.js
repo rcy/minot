@@ -1,13 +1,48 @@
 var express = require('express')
   , routes = require('./routes')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , flash = require('connect-flash')
+  , passport = require('passport')
+  , LocalStrategy = require('passport-local').Strategy;
 
 var Minot = require('./minot/minot');
 var minot = null;
 var mongo_url = process.env['MONGOHQ_URL'] || 'mongodb://localhost:27017/development';
 (new Minot).connect({db: 'mongodb', url:mongo_url}, function(connection) {
   minot = connection;
+});
+
+passport.use(new LocalStrategy( 
+  { 
+    usernameField: 'email',
+    passwordField: 'password' 
+  },
+  function(email, password, done) {
+    console.log('passport.use localstrategy');
+    minot.findUser({email: email}, function(user) {
+      console.log('passport: findUser', user);
+      // if (err) return done(err);
+      if (!user) {
+        return done(null, false, {message: 'No such user'});
+      }
+      if (!minot.userPasswordAuth(user, password)) {
+        return done(null, false, {message: 'Incorrect password'});
+      }
+      return done(null, user);
+    })}
+));
+
+passport.serializeUser(function(user, done) {
+  console.log('serializeUser', user);
+  done(null, user._id);
+});
+passport.deserializeUser(function(id, done) {
+  console.log('deserializeUser', id);
+  minot.findUserById(id, function(user) {
+    console.log(user);
+    done(null, user);
+  });
 });
 
 var app = express();
@@ -19,6 +54,11 @@ app.configure(function(){
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
+  app.use(express.cookieParser('abcdefghi'));
+  app.use(express.session({secret: 'jklmnop'}));
+  app.use(flash());
+  app.use(passport.initialize());
+  app.use(passport.session());
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
@@ -29,18 +69,42 @@ app.configure('development', function(){
 });
 
 app.get('/', routes.index);
-
-app.post('/login', function(req, res) {
-  var email = req.body.email;
-  var password = req.body.password;
-  minot.authUser(email, password, function(err, user) {
-    if (err)
-      res.send(401); // FIXME: what is auth not ok status code?
-    else
-      res.send(user, 200); // FIXME: what is auth ok status code?
-  });
+app.get('/dummy', function(req,res) {
+  res.send({'session': req.session,
+            'user': req.user });
 });
 
+app.get('/signup', function(req, res) {
+  console.log(req.session);
+  var errors = req.session.errors || {};
+  var input = req.session.input || {};
+  res.render('signup', { title: 'Minot Signup', errors: errors, input: input });
+  req.session.errors = {};
+  req.session.input = {};
+});
+app.post('/signup', function(req, res) {
+  minot.userCreate(req.body, function(err, user) {
+    if (err) {
+      res.redirect('/signup');
+    } else {
+      res.redirect('/');
+    }
+  });
+});
+app.get('/logout', function(req,res) {
+  req.logout();
+  res.redirect('/dummy');
+});
+
+app.get('/login', function(req, res) {
+  res.render('login', {title: 'Minot Login', message: req.flash('error')});
+});
+app.post('/login',
+         passport.authenticate('local', { successRedirect: '/dummy',
+                                          failureRedirect: '/login',
+                                          failureFlash: true })
+);
+  
 // api routes
 app.get('/api/lists', function(req, res) {
   minot.lists(function(lists) {

@@ -15,6 +15,9 @@
     "rethinkdb": "*",
     "node-uuid": "*",
     "mongodb": "*",
-    "passport": "*"
+    "passport": "*",
+    "passport-local": "*",
+    "connect-flash": "*",
+    "password-hash": "*"
   }
 }
