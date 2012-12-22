@@ -1,5 +1,4 @@
-App.Models.User = Backbone.Model.extend({
-});
+App.Models.User = Minot.Model.extend({});
 
 // display logged in user in nav bar
 App.Views.UserNavView = Backbone.View.extend({

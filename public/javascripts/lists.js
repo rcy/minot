@@ -1,5 +1,4 @@
-App.Models.List = Backbone.Model.extend({
-  idAttribute: "_id",
+App.Models.List = Minot.Model.extend({
   urlRoot: '/api/lists',
   itemTemplateHTML: function() {
     var html = this.get('itemTemplateHTML');

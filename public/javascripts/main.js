@@ -1,3 +1,13 @@
+var Minot = {
+  Model: {},
+  Views: {},
+  Collections: {}
+}
+
+Minot.Model = Backbone.Model.extend({
+  idAttribute: '_id'
+});
+
 Backbone.View.prototype.close = function() {
   // thanks http://lostechies.com/derickbailey/2011/09/15/zombies-run-managing-page-transitions-in-backbone-apps/
   this.remove();
