@@ -20,16 +20,25 @@ describe("Minot", function() {
 
     describe("lists", function() {
       it('fetch empty set of lists', function(done) {
-        conn.lists(function(result) {
+        conn.lists({}, function(result) {
           assert.equal(result.length, 0);
           done();
         });
       });
 
-      it('should create and fetch list', function(done) {
+      it('should create and fetch all lists including it', function(done) {
         conn.listCreate({name:"newlist"}, function() {
-          conn.lists(function(result) {
+          conn.lists({}, function(result) {
             assert.equal(result.length, 1);
+            done();
+          });
+        });
+      });
+
+      it('should create and fetch it by id', function(done) {
+        conn.listCreate({name:"newlist"}, function(newlist) {
+          conn.listGet(newlist._id, function(result) {
+            assert.equal(result.name, "newlist");
             done();
           });
         });
@@ -37,6 +46,7 @@ describe("Minot", function() {
 
     });
 
+    
     describe("users", function() {
       var fred = {name: "Fred Flintstone", email: "fred@nomail.com", password: "abc"};
       it('should create a new user', function(done) {
@@ -94,6 +104,50 @@ describe("Minot", function() {
           var result = conn.userPasswordAuth(user, "bogusPass99");
           assert.equal(result, false);
           done();
+        });
+      });
+    });
+
+
+    describe("owned lists", function() {
+      var fred = {name: "Fred Flintstone", email: "fred@nomail.com", password: "abc"};
+
+      it('should add a new list owned by a user', function(done) {
+        conn.userCreate(fred, function(err, user) {
+          var uid = user._id;
+          conn.listCreate({name:"newlist", owner: uid}, function(newlist) {
+            conn.listGet(newlist._id, function(result) {
+              assert.equal(user._id, uid);
+              done();
+            });
+          });
+        });
+      });
+
+
+      it('should add a new list owned by a user', function(done) {
+        conn.userCreate(fred, function(err, user) {
+          var uid = user._id;
+          conn.listCreate({name:"newlist", owner: uid}, function(newlist) {
+            conn.lists({owner: uid.toString()}, function(result) {
+              assert.equal(result[0].owner, uid.toString());
+              done();
+            });
+          });
+        });
+      });
+      it('should keep list owned by original owner when updating', function(done) {
+        conn.userCreate(fred, function(err, user) {
+          var uid = user._id;
+          conn.listCreate({name:"newlist", owner: uid}, function(newlist) {
+            conn.listUpdate(newlist._id, {name:"newname"}, function() {
+              conn.lists({owner: uid.toString()}, function(result) {
+                assert.equal(result[0].owner, uid.toString());
+                assert.equal(result[0].name, 'newname');
+                done();
+              });
+            });
+          });
         });
       });
     });

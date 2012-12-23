@@ -35,11 +35,9 @@ passport.use(new LocalStrategy(
 ));
 
 passport.serializeUser(function(user, done) {
-  console.log('serializeUser', user);
   done(null, user._id);
 });
 passport.deserializeUser(function(id, done) {
-  console.log('deserializeUser', id);
   minot.findUserById(id, function(user) {
     user.gravatar_image_url = gravatar_image_url(user.email, 'mm');
     delete user.password;
@@ -125,7 +123,8 @@ app.post('/login',
   
 // api routes
 app.get('/api/lists', function(req, res) {
-  minot.lists(function(lists) {
+  var owner = req.user && req.user._id;
+  minot.lists({owner: owner}, function(lists) {
     res.send({'lists': lists});
   });
 });
@@ -140,10 +139,14 @@ app.get('/api/lists/:id', function(req, res) {
 });
 
 app.post('/api/lists', function(req, res) {
+  var owner = req.user && req.user._id;
+
   minot.listCreate({ name: req.body.name,
-                     fields: req.body.fields },
+                     fields: req.body.fields,
+                     owner: owner
+                   },
                    function(result) {
-                     res.send(result, 201); // NOTE: this might already exist
+                     res.send(result, 201);
                    });
 });
 

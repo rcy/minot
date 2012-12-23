@@ -6,11 +6,7 @@ App.Views.CatalogPage = Backbone.View.extend({
     "click button.create": "create"
   },
   create: function() {
-    var obj = {
-      name: 'new untitled list',
-      fields: [{name: 'summary', type: 'string'}]
-    };
-    var model = new App.Models.List(obj);
+    var model = new App.Models.List();
     model.save(null, {
       wait: true, 
       success: function() { 

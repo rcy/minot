@@ -32,10 +32,12 @@ MinotMongo.prototype.clear = function(callback) {
 }
 
 MinotMongo.prototype.userCreate = function(doc, callback) {
+  var now = new Date();
   var obj = {
     name: doc.name,
     email: doc.email,
-    password: passwordHash.generate(doc.password)
+    password: passwordHash.generate(doc.password),
+    created: now, updated: now
   };
   if (!obj.email) throw "email missing";
   if (!obj.password) throw "password missing";
@@ -75,8 +77,10 @@ MinotMongo.prototype.findUserById = function(id, callback) {
   });
 }
 
-MinotMongo.prototype.lists = function(callback) {
-  this.db.collection('lists').find({}).toArray(function(err, result) {
+MinotMongo.prototype.lists = function(q, callback) {
+  if (q.owner)
+    q.owner = this.oid(q.owner);
+  this.db.collection('lists').find(q).toArray(function(err, result) {
     if (err) throw err;
     callback(result);
   });
@@ -87,6 +91,7 @@ MinotMongo.prototype.oid = function(id) {
 }
 
 MinotMongo.prototype.listGet = function(id, callback) {
+  console.log('listGet, id:', id);
   this.db.collection('lists').findOne({_id: this.oid(id)}, function(err, result) {
     if (err) throw err;
     callback(result);
@@ -94,13 +99,13 @@ MinotMongo.prototype.listGet = function(id, callback) {
 }
 
 MinotMongo.prototype.listCreate = function(doc, callback) {
+  var now = new Date();
   var obj = {
-    name: doc.name,
-    fields: doc.fields || [],
-    ownerID: doc.ownerID || 'anonymous'
+    name: doc.name || 'new untitled list',
+    owner: doc.owner || null,
+    fields: doc.fields || [{name: 'summary', type: 'string'}],
+    created: now, updated: now
   };
-
-  if (!obj.name) throw "need a name"; // validate list properly
 
   validateListFields(obj.fields);
 
@@ -129,11 +134,18 @@ function validateListFields(arr) {
 
 MinotMongo.prototype.listUpdate = function(id, doc, callback) {
   delete doc._id;
+  if (doc.owner)
+    doc.owner = this.oid(doc.owner.toString());
+  console.log('listupdate:',doc);
   validateListFields(doc.fields);
 
-  this.db.collection('lists').findAndModify({_id: this.oid(id)}, [], doc, {w:1, new:true}, function(err, result) {
+  var self = this;
+  this.db.collection('lists').update({_id: this.oid(id)}, {$set: doc}, {w:1, new:true}, function(err, result) {
     if (err) throw err;
-    callback(result);
+    self.listGet(id, function(result) {
+      console.log('update',result);
+      callback(result);
+    });
   });
 }
 
@@ -147,7 +159,8 @@ MinotMongo.prototype.listItems = function(id, callback) {
 
 MinotMongo.prototype.itemAdd = function(listId, doc, callback) {
   doc.listId = listId;
-  var self = this;
+  doc.created = doc.updated = new Date();
+
   this.db.collection('items').insert(doc, {w:1}, function(err, result) {
     if (err) throw err;
     console.log('itemAdd: ', result);
