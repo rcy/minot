@@ -7,7 +7,7 @@ App.Models.List = Minot.Model.extend({
     } else {
       var fields = this.get('fields');
       return _.map(fields, function(f) {
-        return '<td>{{' + f.id + '}}</td>';
+        return '<td>{{'+f._id+'}}</td>';
       }).join('');
     }
   },
@@ -16,7 +16,7 @@ App.Models.List = Minot.Model.extend({
   },
   setFieldAttr: function(id, attr, value){
     var fields = _.clone(this.get('fields'));
-    var field = _.find(fields, function(field) { return field.id === id });
+    var field = _.find(fields, function(field) { return field._id === id });
     field[attr] = value;
     this.set('field', field);
   }

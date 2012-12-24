@@ -6,6 +6,43 @@ App.Models.Item = Minot.Model.extend({
     }
     this.urlRoot = '/api/lists/' + listId + '/items';
   },
+
+  // convert array of model values into object, keyed by fieldId
+  valuesToJSON: function() {
+    var obj = {};
+    _.each(this.get('values'), function(v) {
+      obj[v.fieldId] = v.value;
+    });
+    console.log('valuesToJSON:', obj);
+    return obj;
+  },
+
+  valueObj: function(fieldId) {
+    var obj = _.find(this.get('values'), function(v) {
+      return v.fieldId == fieldId;
+    });
+    return obj;
+  },
+
+  // return the value given by fieldId
+  getValue: function(fieldId) {
+    console.log('value', fieldId);
+    console.log('values', this.get('values'));
+    var obj = this.valueObj(fieldId);
+    console.log(obj);
+    return obj && obj.value;
+  },
+  // set value by fieldId
+  setValue: function(fieldId, value){
+    var obj = this.valueObj(fieldId);
+    if (obj)
+      obj.value = value;
+    else {
+      // no value exists in the array, push a new one
+      var values = this.get('values');
+      values.push({fieldId: fieldId, value: value});
+    }
+  }
 });
 
 App.Collections.Items = Backbone.Collection.extend({
@@ -34,7 +71,7 @@ App.Views.Item = Backbone.View.extend({
     App.dispatcher.trigger('item:view', this.model);
   },
   render: function() {
-    this.$el.html(this.template(this.model.toJSON()));
+    this.$el.html(this.template(this.model.valuesToJSON()));
     return this;
   },
   initialize: function(options) {

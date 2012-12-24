@@ -18,6 +18,8 @@
     "passport": "*",
     "passport-local": "*",
     "connect-flash": "*",
-    "password-hash": "*"
+    "password-hash": "*",
+    "mongoose": "3.x",
+    "bcrypt": "*"
   }
 }

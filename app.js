@@ -10,7 +10,7 @@ var express = require('express')
 var Minot = require('./minot/minot');
 var minot = null;
 var mongo_url = process.env['MONGOHQ_URL'] || 'mongodb://localhost:27017/development';
-(new Minot).connect({db: 'mongodb', url:mongo_url}, function(connection) {
+(new Minot).connect({db: 'mongoose', url:mongo_url}, function(connection) {
   minot = connection;
 });
 
@@ -123,73 +123,79 @@ app.post('/login',
   
 // api routes
 app.get('/api/lists', function(req, res) {
-  var owner = req.user && req.user._id;
-  minot.lists({owner: owner}, function(lists) {
+  var ownerId = req.user ? req.user._id : undefined;
+  minot.lists(ownerId, function(err, lists) {
+    if (err) throw err;
     res.send({'lists': lists});
   });
 });
 
 app.get('/api/lists/:id', function(req, res) {
-  minot.listGet(req.params.id, function(list) {
+  minot.listGet(req.params.id, function(err, list) {
+    console.log(err,list);
+    if (err) return res.send(err, 404);
+
     if (list)
-      res.send(list);
+      return res.send(list);
     else
-      res.send(404);
+      return res.send(null, 404);
   })
 });
 
 app.post('/api/lists', function(req, res) {
   var owner = req.user && req.user._id;
 
-  minot.listCreate({ name: req.body.name,
-                     fields: req.body.fields,
-                     owner: owner
-                   },
-                   function(result) {
+  minot.listCreate({ owner: owner },
+                   function(err, result) {
+                     if (err) return res.send(err, 500);
                      res.send(result, 201);
                    });
 });
 
 app.del('/api/lists/:id', function(req, res) {
   minot.listDestroy(req.params.id,
-                    function(result) {
+                    function(err, result) {
+                      if (err) return res.send(err, 500);
                       res.send(204);
                     });
 });
 
 app.put('/api/lists/:id', function(req, res) {
-  minot.listUpdate(req.params.id,
-                   req.body,
-                   function(result) {
-                     res.send(result, 200);
-                   });
+  minot.listUpdate(req.params.id, req.body, function(err, result){
+    if (err) return res.send(err, 500);
+    minot.listGet(req.params.id, function(err, result){
+      if (err) return res.send(err, 500);
+      res.send(result, 200);
+    });
+  });
 });
 
 app.get('/api/lists/:id/items', function(req, res) {
-  minot.listItems(req.params.id, function(items) {
+  minot.items({listId: req.params.id}, function(err, items) {
+    if (err) return res.send(err, 500);
     res.send({'items': items});
   })
 });
 
 app.post('/api/lists/:id/items', function(req, res) {
-  minot.itemAdd(req.params.id, req.body, function(result) {
-    res.send(result);
+  minot.itemCreate(req.body, function(err, result) {
+    if (err) return res.send(err, 500);
+    res.send(result, 201);
   });
 });
 
 app.del('/api/lists/:lid/items/:id', function(req, res) {
-  minot.itemDestroy(req.params.id, 
-                    function(result) {
-                      res.send(204);
-                    });
+  minot.itemDestroy(req.params.id, function(err, result) {
+    if (err) return res.send(err, 500);
+    res.send(204);
+  });
 });
 
 app.put('/api/lists/:lid/items/:id', function(req, res) {
-  minot.itemUpdate(req.params.id,
-                   req.body,    // TODO: validate this
-                   function(result) {
-                     res.send(result, 200);
-                   });
+  minot.itemUpdate(req.params.id, req.body, function(err, result) {
+    if (err) return res.send(err, 500);
+    res.send({}, 200);
+  });
 });
 
 app.del('/api/lists/:id', function(req, res) {

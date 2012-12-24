@@ -35,13 +35,13 @@ App.Views.ListPage = Backbone.View.extend({
   addColumn: function() {
     var fields = _.clone(this.model.get('fields'));
     fields.push({name:'untitled', type:'string'});
-    this.model.save({fields: fields}, {wait:false});
+    this.model.save({fields: fields}, {wait:true});
   },
   destroyColumn: function(e) {
     e.preventDefault();
     if (confirm('Are you sure you want to permanently delete this column?')) {
-      var del_id = $(e.currentTarget).data('id');
-      var fields = _.reject(this.model.get('fields'), function(f) { return f.id === del_id; });
+      var delId = $(e.currentTarget).data('id');
+      var fields = _.reject(this.model.get('fields'), function(f) { return f._id === delId; });
       this.model.save({fields: fields});
     }
   },
@@ -100,9 +100,9 @@ App.Views.ModalViewItem = App.Views.ModalBase.extend({
 
     _.each(this.listModel.get('fields'),
            function(field) {
-             obj.push({id: field.id, name: field.name, type: field.type, value: this.model.get(field.id)});
+             obj.push({id: field._id, name: field.name, type: field.type, value: this.model.getValue(field._id)});
            }, this);
-
+    console.log('obj',obj);
     var titleField = obj.shift(); // titles the model, not in regular list of fields in body
     var $popup = $(this.template({listName: this.listModel.get('name'), titleField: titleField, fields: obj}));
 
@@ -112,15 +112,16 @@ App.Views.ModalViewItem = App.Views.ModalBase.extend({
     this.$el.find('.editable').editable({ 
       toggle:'manual',
       url: function(params) {
-        console.log('setting:',params.name, 'to', params.value, 'for', model.id);
-        model.set(params.name, params.value);
+        console.log('params:', params);
+        console.log('setting:', params.name, 'to', params.value, 'for', model.id);
+        model.setValue(params.name, params.value);
         model.save(null, {wait:false, 
                           error:function(model, xhr, options) {
-                            alert('save error');
                             console.log('save error', model, xhr, options);
                           },
                           success:function(model, xhr, options) {
                             //console.log('save success', model, xhr, options);
+                            model.trigger('change');
                           }
                          });
       }
@@ -164,6 +165,7 @@ App.Views.ModalItemCreate = Backbone.View.extend({
   submit: function(e) {
     e.preventDefault();
     var model = new App.Models.Item(this.form.serialize());
+    console.log(model);
     var $popup = this.$el;
 
     App.data.items.create(model, {
@@ -194,9 +196,10 @@ App.Views.ItemCreateForm = Backbone.View.extend({
   },
   serialize: function() {
     var arr = this.$el.serializeArray();
-    var obj = {listId: this.list.id};
+    var obj = {listId: this.list.id, values: []};
     for (i in arr) {
-      obj[arr[i].name] = arr[i].value;
+      var value = { fieldId:arr[i].name, value:arr[i].value };
+      obj.values.push(value);
     }
     return obj;
   },

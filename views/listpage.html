@@ -29,15 +29,15 @@
       <thead>
         {{#each fields}}
         <th>
-          <span class="editable column-name" data-name="{{id}}">{{name}}</span>
+          <span class="editable column-name" data-name="{{_id}}">{{name}}</span>
           <div class="btn-group pull-right">
-            <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" href="#" title="{{id}}">
+            <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" href="#" title="{{_id}}">
               <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-              <li><a href="#" class="rename-column" data-id="{{id}}">Rename Column</a></li>
+              <li><a href="#" class="rename-column" data-id="{{_id}}">Rename Column</a></li>
               <li class="divider"></li>
-              <li><a href="#" class="destroy-column" data-id="{{id}}">Delete Column</a></li>
+              <li><a href="#" class="destroy-column" data-id="{{_id}}">Delete Column</a></li>
             </ul>
           </div>
         </th>
