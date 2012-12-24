@@ -20,6 +20,7 @@
     "connect-flash": "*",
     "password-hash": "*",
     "mongoose": "3.x",
-    "bcrypt": "*"
+    "bcrypt": "*",
+    "session-mongoose": "*"
   }
 }

@@ -6,6 +6,7 @@ var express = require('express')
   , passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
 
+var SessionStore = require('session-mongoose')(express);
 var Minot = require('./minot/minot');
 var minot = null;
 var mongo_url = process.env['MONGOHQ_URL'] || 'mongodb://localhost:27017/development';
@@ -40,6 +41,11 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
+var store = new SessionStore({
+  url: mongo_url,
+  interval: 120000
+});
+
 var app = express();
 
 app.configure(function(){
@@ -50,7 +56,7 @@ app.configure(function(){
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.cookieParser('abcdefghi'));
-  app.use(express.session({secret: 'jklmnop'}));
+  app.use(express.session({store: store, secret: 'jklmnop'}));
   app.use(flash());
   app.use(passport.initialize());
   app.use(passport.session());
