@@ -105,7 +105,7 @@ app.post('/login',
   
 // api routes
 app.get('/api/lists', function(req, res) {
-  var ownerId = req.user ? req.user._id : undefined;
+  var ownerId = req.user && req.user._id;
   minot.lists(ownerId, function(err, lists) {
     if (err) throw err;
     res.send({'lists': lists});
