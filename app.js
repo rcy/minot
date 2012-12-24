@@ -22,10 +22,8 @@ passport.use(new LocalStrategy(
     minot.userLogin({email: email}, password, function(err, user){
       if (err) return done(err);
       if (user) {
-        console.log('login: good', user);
         return done(null, user);
       } else {
-        console.log('login: bad');
         return done(null, false, {message: 'Authentication failed'});
       }
     });
@@ -36,7 +34,6 @@ passport.serializeUser(function(user, done) {
   done(null, user._id);
 });
 passport.deserializeUser(function(id, done) {
-  console.log('deserializeUser1', id);
   minot.userGet(id, function(err, user) {
     if (err) done(err);
     done(null, user);
@@ -74,7 +71,6 @@ app.get('/dummy', function(req,res) {
 });
 
 app.get('/signup', function(req, res) {
-  console.log(req.session);
   var errors = req.session.errors || {};
   var input = req.session.input || {};
   res.render('signup', { title: 'Minot Signup', errors: errors, input: input });
@@ -118,7 +114,6 @@ app.get('/api/lists', function(req, res) {
 
 app.get('/api/lists/:id', function(req, res) {
   minot.listGet(req.params.id, function(err, list) {
-    console.log(err,list);
     if (err) return res.send(err, 404);
 
     if (list)
