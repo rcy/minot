@@ -83,7 +83,7 @@ app.post('/signup', function(req, res) {
       res.redirect('/signup');
     } else {
       req.login(user, function(err) {
-        if (err) throw err;
+        if (err) return res.send(err, 500);
         return res.redirect('/');
       });
     }
@@ -107,7 +107,7 @@ app.post('/login',
 app.get('/api/lists', function(req, res) {
   var ownerId = req.user && req.user._id;
   minot.lists(ownerId, function(err, lists) {
-    if (err) throw err;
+    if (err) return res.send(err, 500);
     res.send({'lists': lists});
   });
 });
