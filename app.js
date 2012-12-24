@@ -4,8 +4,7 @@ var express = require('express')
   , path = require('path')
   , flash = require('connect-flash')
   , passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy
-  , crypto = require('crypto');
+  , LocalStrategy = require('passport-local').Strategy;
 
 var Minot = require('./minot/minot');
 var minot = null;
@@ -20,42 +19,29 @@ passport.use(new LocalStrategy(
     passwordField: 'password' 
   },
   function(email, password, done) {
-    console.log('passport.use localstrategy');
-    minot.findUser({email: email}, function(user) {
-      console.log('passport: findUser', user);
-      // if (err) return done(err);
-      if (!user) {
-        return done(null, false, {message: 'No such user'});
+    minot.userLogin({email: email}, password, function(err, user){
+      if (err) return done(err);
+      if (user) {
+        console.log('login: good', user);
+        return done(null, user);
+      } else {
+        console.log('login: bad');
+        return done(null, false, {message: 'Authentication failed'});
       }
-      if (!minot.userPasswordAuth(user, password)) {
-        return done(null, false, {message: 'Incorrect password'});
-      }
-      return done(null, user);
-    })}
+    });
+  }
 ));
 
 passport.serializeUser(function(user, done) {
   done(null, user._id);
 });
 passport.deserializeUser(function(id, done) {
-  minot.findUserById(id, function(user) {
-    user.gravatar_image_url = gravatar_image_url(user.email, 'mm');
-    delete user.password;
+  console.log('deserializeUser1', id);
+  minot.userGet(id, function(err, user) {
+    if (err) done(err);
     done(null, user);
   });
 });
-
-function gravatar_hash(_email) {
-  var email = _email.toLowerCase();
-  var hash = crypto.createHash('md5').update(email).digest("hex");
-  return hash;
-}
-function gravatar_image_url(_email, _default) {
-  return 'http://gravatar.com/avatar/' + gravatar_hash(_email) + '?d=' + _default;
-}
-function gravatar_profile_url(_email) {
-  return 'http://gravatar.com/' + gravatar_hash(_email);
-}
 
 var app = express();
 
@@ -143,9 +129,9 @@ app.get('/api/lists/:id', function(req, res) {
 });
 
 app.post('/api/lists', function(req, res) {
-  var owner = req.user && req.user._id;
+  var ownerId = req.user && req.user._id;
 
-  minot.listCreate({ owner: owner },
+  minot.listCreate({ ownerId: ownerId },
                    function(err, result) {
                      if (err) return res.send(err, 500);
                      res.send(result, 201);

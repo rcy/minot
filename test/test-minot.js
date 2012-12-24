@@ -99,10 +99,60 @@ describe("Minot", function() {
 
   describe('users', function(){
     it('should create a new user', function(done){
-      conn.userCreate(fred, function(err, result) {
+      conn.userCreate(fred, function(err, user) {
         assert.equal(err, null);
-        assert.equal(result.name, fred.name);
-        assert.notEqual(result.password, fred.password);
+        assert.equal(user.name, fred.name);
+        assert.equal(user.gravatar_hash.length, 32);
+        assert.notEqual(user.password, fred.password);
+        done();
+      });
+    });
+
+    it('should fetch a user by id and not include password field', function(done){
+      conn.userCreate(fred, function(err, result){
+        conn.userGet(result._id, function(err, result){
+          assert.equal(err, null);
+          assert.equal(result.name, fred.name);
+          assert.equal(result.email, fred.email);
+          assert.equal(result.password, undefined);
+          done();
+        });
+      });
+    });
+
+    it('should find a user by email', function(done){
+      conn.userCreate(fred, function(err, result){
+        conn.userFind({email: fred.email}, function(err, result){
+          assert.equal(err, null);
+          assert.equal(result.name, fred.name);
+          done();
+        });
+      });
+    });
+
+    it('should return user if can find user and password matches', function(done){
+      conn.userCreate(fred, function(err, user){
+        conn.userLogin({email: fred.email}, 'abc', function(err, user){
+          assert.equal(err, null);
+          assert.equal(user.email, fred.email);
+          done();
+        });
+      });
+    });
+
+    it('should not return user if can find user and password does not match', function(done){
+      conn.userCreate(fred, function(err, user){
+        conn.userLogin({email: fred.email}, 'badpass', function(err, user){
+          assert.equal(err, null);
+          assert.equal(user, null);
+          done();
+        });
+      });
+    });
+    it('should not return user if cannot find user', function(done){
+      conn.userLogin({email: 'bogusemail'}, 'anypass', function(err, user, message){
+        assert.equal(err, null);
+        assert.equal(user, null);
         done();
       });
     });

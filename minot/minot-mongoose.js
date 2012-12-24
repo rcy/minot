@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var bcrypt = require('bcrypt');
+var crypto = require('crypto');
 
 var fieldSchema = mongoose.Schema({
   name: String,
@@ -55,13 +57,13 @@ var itemSchema = mongoose.Schema({
 var userSchema = mongoose.Schema({
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
-  name: { type: String },
-  email: { type: String, required: true, index: {unique: true} },
+  name: { type: String, trim: true },
+  email: { type: String, required: true, trim: true, index: {unique: true} },
+  gravatar_hash: { type: String },
   password: { type: String, required: true }
 });
 
 userSchema.pre('save', function(next){
-  var bcrypt = require('bcrypt');
   var SALT_WORK_FACTOR = 10;
   var user = this;
 
@@ -77,6 +79,15 @@ userSchema.pre('save', function(next){
       next();
     });
   });
+});
+
+userSchema.pre('save', function(next){
+  if (!this.isModified('email')) return next();
+
+  this.email = this.email.toLowerCase();
+  this.gravatar_hash = crypto.createHash('md5').update(this.email).digest("hex");
+
+  next();
 });
 
 var Field = mongoose.model('Field', fieldSchema);
@@ -116,6 +127,27 @@ MinotMongoose.prototype.userCreate = function(doc, callback){
   var user = new User(doc);
   user.save(function(err){
     callback(err, user);
+  });
+}
+
+MinotMongoose.prototype.userFind = function(q, callback){
+  User.findOne(q, {password:0}, callback);
+}
+MinotMongoose.prototype.userGet = function(id, callback){
+  this.userFind({_id: id}, callback);
+}
+// return user in callback result if user can be found and password matches
+MinotMongoose.prototype.userLogin = function(q, cleartext, callback) {
+  User.findOne(q, function(err, user) {
+    if (err) return callback(err);
+    if (!user) return callback(null, null);
+    bcrypt.compare(cleartext, user.password, function(err, success){
+      if (err) return callback(err);
+      if (success)
+        callback(null, user);
+      else
+        callback(null, null);
+    })
   });
 }
 
