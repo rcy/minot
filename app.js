@@ -125,7 +125,7 @@ app.get('/api/lists/:id', function(req, res) {
       return res.send(list);
     else
       return res.send(null, 404);
-  })
+  });
 });
 
 app.post('/api/lists', function(req, res) {

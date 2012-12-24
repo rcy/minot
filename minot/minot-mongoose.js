@@ -186,6 +186,10 @@ MinotMongoose.prototype.itemCreate = function(doc, callback){
   });
 }
 
+MinotMongoose.prototype.itemDestroy = function(id, callback){
+  Item.remove({_id: id}, callback);    
+}
+
 MinotMongoose.prototype.items = function(q, callback){
   Item.find(q, callback);
 }

@@ -218,6 +218,17 @@ describe("Minot", function() {
       });
     });
     it('should fetch multiple items from a list');
-    it('should remove an item from a list');
+    it('should remove an item from a list', function(done){
+      conn.itemCreate({listId: list.id}, function(err, item){
+        conn.itemDestroy(item.id, function(err){
+          assert.equal(err, null);
+          conn.items({listId: list.id}, function(err, items){
+            assert.equal(err, null);
+            assert.equal(items.length, 0);
+            done();
+          });
+        });
+      });
+    });
   });
 });
