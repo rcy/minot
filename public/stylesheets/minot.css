@@ -3,5 +3,15 @@ table.no-lines td {
 }
 
 tbody.items:hover {
-    cursor:pointer;
+    cursor: pointer;
+}
+
+.editable:hover {
+    cursor: pointer;
+}
+th.column a.column-pulldown{
+    color:#fff;
+}
+th.column:hover a.column-pulldown {
+    color:#0088cc; /* use less and compile this based on bootstrap link color */
 }

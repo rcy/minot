@@ -35,11 +35,11 @@
       <table class="table table-hover table-condensed table-striped table-bordered">
         <thead>
           {{#each fields}}
-          <th>
+          <th class="column">
             <span class="editable column-name" data-name="{{_id}}">{{name}}</span>
             <div class="btn-group pull-right">
-              <a class="btn btn-link dropdown-toggle" data-toggle="dropdown" href="#" title="{{_id}}">
-                <b class="caret"></b>
+              <a class="btn btn-mini btn-link dropdown-toggle column-pulldown" data-toggle="dropdown" href="#" title="{{_id}}">
+                <i class="icon-chevron-down"></i>
               </a>
               <ul class="dropdown-menu">
                 <li><a href="#" class="rename-column" data-id="{{_id}}">Rename Column</a></li>
