@@ -1,9 +1,9 @@
 <script id="listpage-template" type="text/template">
   <div class="row">
     <div class="span11">
-      <h1>
+      <h2>
         <span class="editable list-name">{{name}}</span>
-      </h1>
+      </h2>
     </div>
     <div class="span1">
       <br>
@@ -32,12 +32,12 @@
     <div class="span12">
 
       <a href="#" class="pull-right add-column">Add Column</a>
-      <table class="table table-hover table-condensed table-striped table-bordered">
+      <table class="table table-hover table-striped">
         <thead>
           {{#each fields}}
           <th class="column">
             <span class="editable column-name" data-name="{{_id}}">{{name}}</span>
-            <div class="btn-group pull-right">
+            <div class="btn-group">
               <a class="btn btn-mini btn-link dropdown-toggle column-pulldown" data-toggle="dropdown" href="#" title="{{_id}}">
                 <i class="icon-chevron-down"></i>
               </a>
