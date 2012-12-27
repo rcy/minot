@@ -1,14 +1,20 @@
 <script id="user-nav" type="text/template">
   {{#if email}}
   <ul class="nav">
-    <li class="nav">
-      <a href="/profile/{{_id}}">
+    <li class="dropdown">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown">
         <img src="http://gravatar.com/avatar/{{gravatar_hash}}" width="24" height="24" />
-        {{email}}
+        {{email}}<i class="icon-caret-down"></i>
       </a>
-    </li>
-    <li class="nav">
-      <a href="/logout" class="sign-out">Log out</a>
+      <ul class="dropdown-menu pull-right">
+        <!-- <li> -->
+        <!--   <a href="/profile" class="view-profile"><i class="icon-user"></i> View Profile</a> -->
+        <!-- </li> -->
+        <!-- <li class="divider"></li> -->
+        <li>
+          <a href="/logout" class="sign-out"><i class="icon-signout"></i> Sign Out</span></a>
+        </li>
+      </ul>
     </li>
   </ul>
   {{else}}
